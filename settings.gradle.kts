@@ -1,1 +1,1 @@
-rootProject.name = "examplemod"
+rootProject.name = "COVID-19"

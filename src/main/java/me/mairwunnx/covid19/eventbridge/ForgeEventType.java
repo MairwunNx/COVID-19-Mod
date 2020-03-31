@@ -1,4 +1,4 @@
-package com.yourname.modid.eventbridge;
+package me.mairwunnx.covid19.eventbridge;
 
 public enum ForgeEventType {
     CommonSetup,
