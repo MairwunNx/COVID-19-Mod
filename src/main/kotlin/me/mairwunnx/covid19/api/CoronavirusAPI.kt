@@ -104,13 +104,7 @@ object CoronavirusAPI {
             if (it == null) {
                 addPlayerData(
                     CoronavirusModel.Player(
-                        false,
-                        initiator,
-                        0.0,
-                        CoronavirusInfectStatus.Actively,
-                        false,
-                        name,
-                        1
+                        false, initiator, 0.0, CoronavirusInfectStatus.Actively, false, name, 1
                     )
                 )
             } else {
@@ -130,4 +124,10 @@ object CoronavirusAPI {
     fun isPlayerExist(name: String): Boolean {
         getPlayerData(name)?.let { return true } ?: return false
     }
+
+    fun isPlayerLoggedIn(name: String) = getLoggedInPlayers().contains(name)
+    fun setPlayerLoggedIn(name: String) = getLoggedInPlayers().add(name)
+    fun getLoggedInPlayers() = CoronavirusStore.take().loggedInPlayers
+    fun getCoronavirus() = CoronavirusStore.take().coronavirus
+    fun getPlayers() = CoronavirusStore.take().players
 }

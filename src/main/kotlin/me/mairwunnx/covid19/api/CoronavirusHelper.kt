@@ -6,6 +6,8 @@ inline fun withChance(chance: Double, action: () -> Unit) {
     if (Math.random() < chance) action.invoke()
 }
 
+fun isEvenNumber(number: Int) = (number and 1) == 0
+
 fun expandAxisAlignedBB(
     size: Double,
     axisAlignedBB: AxisAlignedBB
