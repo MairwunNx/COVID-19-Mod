@@ -1,4 +1,5 @@
 import net.minecraftforge.gradle.userdev.UserDevExtension
+import org.jetbrains.kotlin.gradle.tasks.*
 
 buildscript {
     repositories {
@@ -66,6 +67,12 @@ tasks.withType<Jar> {
             "Implementation-Version" to project.version,
             "Implementation-Vendor" to "MairwunNx (Pavel Erokhin)"
         )
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
     }
 }
 

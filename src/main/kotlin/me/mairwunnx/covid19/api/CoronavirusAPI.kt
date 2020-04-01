@@ -2,13 +2,13 @@ package me.mairwunnx.covid19.api
 
 import me.mairwunnx.covid19.api.effects.*
 import me.mairwunnx.covid19.api.presets.*
+import me.mairwunnx.covid19.api.store.CoronavirusModel
+import me.mairwunnx.covid19.api.store.CoronavirusStore
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.passive.BatEntity
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
-import net.minecraft.util.math.AxisAlignedBB
-import kotlin.math.roundToInt
 
 object CoronavirusAPI {
     private var cachedWorldDifficulty = 2
@@ -49,20 +49,34 @@ object CoronavirusAPI {
     }
 
     private var cachedEffectInstance = EffectInstance(
-        Effects.UNLUCK, CoronavirusMediumPreset.infectedMobInfectDurationParam.roundToInt(), 1
+        Effects.UNLUCK, CoronavirusMediumPreset.infectedMobInfectDurationParam.toInt(), 1
     )
 
     fun markEntityAsInfected(entity: LivingEntity) {
         val params = getCoronavirusParameters(entity.world.difficulty.id)
 
-        if (cachedEffectInstance.duration != params.infectedMobInfectDurationParam.roundToInt()) {
+        if (cachedEffectInstance.duration != params.infectedMobInfectDurationParam.toInt()) {
             cachedEffectInstance = EffectInstance(
                 Effects.UNLUCK,
-                params.infectedMobInfectDurationParam.roundToInt(),
+                params.infectedMobInfectDurationParam.toInt(),
                 1
             )
         }
         entity.addPotionEffect(cachedEffectInstance)
+    }
+
+    fun isPlayerInfected(name: String): Boolean {
+        getPlayerData(name)?.let {
+            return it.infectStatus != CoronavirusInfectStatus.None
+        }
+        return false
+    }
+
+    fun isEntityInfected(entity: LivingEntity): Boolean = when (entity) {
+        is BatEntity -> true
+        else -> entity.activePotionEffects.map {
+            it.effectName
+        }.contains(Effects.UNLUCK.name)
     }
 
     fun getInfectInitiatorType(
@@ -72,13 +86,48 @@ object CoronavirusAPI {
         else -> CoronavirusInfectInitiator.Entity
     }
 
-    fun isEntityInfected(entity: LivingEntity): Boolean {
-        return if (entity is BatEntity) {
-            true
-        } else {
-            entity.activePotionEffects.map {
-                it.effectName
-            }.contains(Effects.UNLUCK.name)
+    fun getPlayerInfectInitiator(name: String): CoronavirusInfectInitiator? =
+        getPlayerData(name)?.let { return it.infectInitiator }
+
+    fun infectPlayer(name: String, dose: Double) {
+        getPlayerData(name)?.let {
+            it.infectPercent += dose
+            it.stage = (it.infectPercent * 0.1).toInt() + 1
         }
+    }
+
+    fun infectPlayerInitially(
+        name: String,
+        initiator: CoronavirusInfectInitiator
+    ) {
+        getPlayerData(name).let {
+            if (it == null) {
+                addPlayerData(
+                    CoronavirusModel.Player(
+                        false,
+                        initiator,
+                        0.0,
+                        CoronavirusInfectStatus.Actively,
+                        false,
+                        name,
+                        1
+                    )
+                )
+            } else {
+                it.infectStatus = CoronavirusInfectStatus.Actively
+                it.infectInitiator = initiator
+            }
+        }
+    }
+
+    fun addPlayerData(model: CoronavirusModel.Player) {
+        if (!isPlayerExist(model.player)) CoronavirusStore.take().players.add(model)
+    }
+
+    fun getPlayerData(name: String): CoronavirusModel.Player? =
+        CoronavirusStore.take().players.find { it.player == name }
+
+    fun isPlayerExist(name: String): Boolean {
+        getPlayerData(name)?.let { return true } ?: return false
     }
 }

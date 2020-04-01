@@ -9,8 +9,8 @@ object CoronavirusEffect1 : ICoronavirusEffect {
     const val slownessDurationTicks = 20
 
     override val effects: ArrayList<EffectInstance> = arrayListOf(
-        EffectInstance(Effects.NAUSEA, 80, 1),
-        EffectInstance(Effects.SLOWNESS, 20, 1)
+        EffectInstance(Effects.NAUSEA, nauseaDurationTicks, 1),
+        EffectInstance(Effects.SLOWNESS, slownessDurationTicks, 1)
     )
 
     override fun apply(target: ServerPlayerEntity) {
