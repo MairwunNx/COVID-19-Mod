@@ -26,7 +26,21 @@ object CoronavirusHardPreset : ICoronavirusParameters {
     override val infectedEatInfectDoseParam =
         prevPreset.infectedEatInfectDoseParam * infectedEatInfectDoseModifier
 
+    override val healingGoldenAppleHealDoseParam =
+        prevPreset.healingGoldenAppleHealDoseParam * healingGoldenAppleHealDoseModifier
+    override val healingEnchantedGoldenAppleHealDoseParam =
+        prevPreset.healingEnchantedGoldenAppleHealDoseParam * healingEnchantedGoldenAppleHealDoseModifier
+    override val healingGoldenCarrotHealDoseParam =
+        prevPreset.healingGoldenCarrotHealDoseParam * healingGoldenCarrotHealDoseModifier
+    override val healingPotionHealDoseParam =
+        prevPreset.healingPotionHealDoseParam * healingPotionHealDoseModifier
+    override val healingStrongPotionHealDoseParam =
+        prevPreset.healingStrongPotionHealDoseParam * healingStrongPotionHealDoseModifier
+
     override val epidemicChanceParam = prevPreset.epidemicChanceParam
     override val epidemicInfectedMobSpawnChanceParam =
         prevPreset.epidemicInfectedMobSpawnChanceParam * epidemicInfectedMobSpawnChanceModifier
+
+    override val playerVirusEffectChanceParam =
+        prevPreset.playerVirusEffectChanceParam * playerVirusEffectChanceModifier
 }

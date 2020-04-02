@@ -15,6 +15,7 @@ import net.minecraft.entity.passive.PigEntity
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.Items
+import net.minecraft.potion.Potions
 import net.minecraft.util.SoundEvents
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.server.ServerWorld
@@ -60,9 +61,16 @@ internal class EntryPoint {
                 event.world.difficulty.id
             )
 
-            withChance(params.infectedMobSpawnChanceParam) {
-                CoronavirusAPI.getCoronavirus().infected++
-                CoronavirusAPI.markEntityAsInfected(event.entityLiving)
+            if (CoronavirusTemporaryState.epidemic) {
+                withChance(params.epidemicInfectedMobSpawnChanceParam) {
+                    CoronavirusAPI.getCoronavirus().infected++
+                    CoronavirusAPI.markEntityAsEpidemic(event.entityLiving)
+                }
+            } else {
+                withChance(params.infectedMobSpawnChanceParam) {
+                    CoronavirusAPI.getCoronavirus().infected++
+                    CoronavirusAPI.markEntityAsInfected(event.entityLiving)
+                }
             }
         }
     }
@@ -75,34 +83,38 @@ internal class EntryPoint {
         if (infectedEntityTicks == infectedEntityChecksEveryTicks) {
             infectedEntityTicks = 0
 
-            if (CoronavirusAPI.isEntityInfected(event.entityLiving)) {
-                val params = CoronavirusAPI.getCoronavirusParameters(
-                    event.entity.world.difficulty.id
-                )
-
-                val players = event.entityLiving.world.getEntitiesWithinAABB(
-                    ServerPlayerEntity::class.java,
-                    expandAxisAlignedBB(
-                        params.infectedMobInfectRangeParam,
-                        event.entityLiving.boundingBox
+            when {
+                CoronavirusAPI.isEntityInfected(
+                    event.entityLiving, CoronavirusTemporaryState.epidemic
+                ) -> {
+                    val params = CoronavirusAPI.getCoronavirusParameters(
+                        event.entity.world.difficulty.id
                     )
-                )
 
-                players.forEach {
-                    if (CoronavirusAPI.isPlayerInfected(it.name.string)) {
-                        withChance(params.infectedMobInfectEntityChanceParam) {
-                            CoronavirusAPI.infectPlayer(
-                                it.name.string,
-                                params.infectedMobInfectDosePerTickParam
-                            )
-                        }
-                    } else {
-                        withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
-                            CoronavirusAPI.getCoronavirus().infected++
-                            CoronavirusAPI.infectPlayerInitially(
-                                it.name.string,
-                                CoronavirusAPI.getInfectInitiatorType(event.entityLiving)
-                            )
+                    val players = event.entityLiving.world.getEntitiesWithinAABB(
+                        ServerPlayerEntity::class.java,
+                        expandAxisAlignedBB(
+                            params.infectedMobInfectRangeParam,
+                            event.entityLiving.boundingBox
+                        )
+                    )
+
+                    players.forEach {
+                        if (CoronavirusAPI.isPlayerInfected(it.name.string)) {
+                            withChance(params.infectedMobInfectEntityChanceParam) {
+                                CoronavirusAPI.infectPlayer(
+                                    it.name.string,
+                                    params.infectedMobInfectDosePerTickParam
+                                )
+                            }
+                        } else {
+                            withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
+                                CoronavirusAPI.getCoronavirus().infected++
+                                CoronavirusAPI.infectPlayerInitially(
+                                    it.name.string,
+                                    CoronavirusAPI.getInfectInitiatorType(event.entityLiving)
+                                )
+                            }
                         }
                     }
                 }
@@ -158,19 +170,70 @@ internal class EntryPoint {
         }
     }
 
+    private var epidemicWorldTicks = 0
+
     @SubscribeEvent
     fun onWorldTick(event: TickEvent.WorldTickEvent) {
-        // with chance call epidemic
+        epidemicWorldTicks += 1
+        if (epidemicWorldTicks == epidemicChanceChecksEveryTicks) {
+            epidemicWorldTicks = 0
+
+            val params = CoronavirusAPI.getCoronavirusParameters(
+                event.world.difficulty.id
+            )
+
+            withChance(params.epidemicChanceParam) {
+                CoronavirusTemporaryState.epidemic = true
+                CoronavirusAPI.getCoronavirus().epidemics++
+                // todo: send message to all players on server about it.
+            }
+        }
     }
+
+    private var virusPlayerTicks = 0
 
     @SubscribeEvent
     fun onPlayerTick(event: TickEvent.PlayerTickEvent) {
-        // with chance apply effects on player by stage
+        virusPlayerTicks += 1
+        if (virusPlayerTicks == playerVirusChecksEveryTicks) {
+            virusPlayerTicks = 0
+
+            val params = CoronavirusAPI.getCoronavirusParameters(
+                event.player.world.difficulty.id
+            )
+
+            // todo: create minimal time cooldown for chance checking. (e.g 1 - 2min) and decrement time by difficulty.
+            withChance(params.playerVirusEffectChanceParam) {
+                CoronavirusAPI.getPlayerPercent(event.player.name.string)?.let {
+                    CoronavirusAPI.getCoronavirusEffectByPercent(
+                        it
+                    ).apply(event.player as ServerPlayerEntity)
+                }
+            }
+
+            handlePlayerVirusState()
+        }
+
+        /*
+
+         */
+
+        // if (CoronavirusAPI.getPlayerInfectType() == recession) {
+        //      CoronavirusAPI.disinfectPlayer(..., param. ...)
+        // }
+        // if (CoronavirusAPI.getPlayerInfectType() == actively) {
+        //      CoronavirusAPI.infectPlayer(..., param. ...)
+        // }
+
         // handle player virus: suspended, actively, recession
     }
 
+    fun handlePlayerVirusState() {
+
+    }
+
     @SubscribeEvent
-    fun onMeatEating(event: LivingEntityUseItemEvent.Start) {
+    fun onPlayerEating(event: LivingEntityUseItemEvent.Start) {
         if (event.entityLiving is ServerPlayerEntity) {
             if (
                 event.item.item == Items.BEEF ||
@@ -180,27 +243,62 @@ internal class EntryPoint {
                 event.item.item == Items.MUTTON ||
                 event.item.item == Items.SALMON ||
                 event.item.item == Items.COD
-            ) {
-                val params = CoronavirusAPI.getCoronavirusParameters(
-                    event.entity.world.difficulty.id
-                )
-                val player = event.entityLiving as ServerPlayerEntity
+            ) onInfectedMeatEating(event)
+            onHealingEatEating(event)
+        }
+    }
 
-                if (CoronavirusAPI.isPlayerInfected(player.name.string)) {
-                    withChance(params.infectedMobInfectEntityChanceParam) {
-                        CoronavirusAPI.infectPlayer(
-                            player.name.string,
-                            params.infectedEatInfectDoseParam
-                        )
-                    }
-                } else {
-                    withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
-                        CoronavirusAPI.getCoronavirus().infected++
-                        CoronavirusAPI.infectPlayerInitially(
-                            player.name.string, CoronavirusInfectInitiator.Eat
-                        )
-                    }
-                }
+    private fun onHealingEatEating(event: LivingEntityUseItemEvent.Start) {
+        val params = CoronavirusAPI.getCoronavirusParameters(
+            event.entity.world.difficulty.id
+        )
+        val player = event.entityLiving as ServerPlayerEntity
+        var healPercentage = 0.0
+
+        when (event.item.item) {
+            Items.GOLDEN_APPLE -> healPercentage = rndDoubleDecrementOrIncrement(
+                params.healingGoldenAppleHealDoseParam,
+                healingGoldenAppleHealDoseFloat
+            )
+            Items.ENCHANTED_GOLDEN_APPLE -> healPercentage = rndDoubleDecrementOrIncrement(
+                params.healingEnchantedGoldenAppleHealDoseParam,
+                healingEnchantedGoldenAppleHealDoseFloat
+            )
+            Items.GOLDEN_CARROT -> healPercentage = rndDoubleDecrementOrIncrement(
+                params.healingGoldenCarrotHealDoseParam,
+                healingGoldenCarrotHealDoseFloat
+            )
+            Potions.HEALING -> healPercentage = rndDoubleDecrementOrIncrement(
+                params.healingPotionHealDoseParam,
+                healingPotionHealDoseFloat
+            )
+            Potions.STRONG_HEALING -> healPercentage = rndDoubleDecrementOrIncrement(
+                params.healingStrongPotionHealDoseParam,
+                healingStrongPotionHealDoseFloat
+            )
+        }
+        CoronavirusAPI.disinfectPlayer(player.name.string, healPercentage)
+    }
+
+    private fun onInfectedMeatEating(event: LivingEntityUseItemEvent.Start) {
+        val params = CoronavirusAPI.getCoronavirusParameters(
+            event.entity.world.difficulty.id
+        )
+        val player = event.entityLiving as ServerPlayerEntity
+
+        if (CoronavirusAPI.isPlayerInfected(player.name.string)) {
+            withChance(params.infectedMobInfectEntityChanceParam) {
+                CoronavirusAPI.infectPlayer(
+                    player.name.string,
+                    params.infectedEatInfectDoseParam
+                )
+            }
+        } else {
+            withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
+                CoronavirusAPI.getCoronavirus().infected++
+                CoronavirusAPI.infectPlayerInitially(
+                    player.name.string, CoronavirusInfectInitiator.Eat
+                )
             }
         }
     }

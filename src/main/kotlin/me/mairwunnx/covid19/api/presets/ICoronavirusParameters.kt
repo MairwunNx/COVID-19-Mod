@@ -10,6 +10,12 @@ interface ICoronavirusParameters {
     val infectedMobInitiallyInfectEntityChanceParam: Double
     val infectedEatChanceParam: Double
     val infectedEatInfectDoseParam: Double
+    val healingGoldenAppleHealDoseParam: Double
+    val healingEnchantedGoldenAppleHealDoseParam: Double
+    val healingGoldenCarrotHealDoseParam: Double
+    val healingPotionHealDoseParam: Double
+    val healingStrongPotionHealDoseParam: Double
     val epidemicChanceParam: Double
     val epidemicInfectedMobSpawnChanceParam: Double
+    val playerVirusEffectChanceParam: Double
 }

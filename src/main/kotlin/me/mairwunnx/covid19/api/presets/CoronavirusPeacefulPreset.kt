@@ -16,6 +16,14 @@ object CoronavirusPeacefulPreset : ICoronavirusParameters {
     override val infectedEatChanceParam = infectedEatChance
     override val infectedEatInfectDoseParam = infectedEatInfectDose
 
+    override val healingGoldenAppleHealDoseParam = healingGoldenAppleHealDose
+    override val healingEnchantedGoldenAppleHealDoseParam = healingEnchantedGoldenAppleHealDose
+    override val healingGoldenCarrotHealDoseParam = healingGoldenCarrotHealDose
+    override val healingPotionHealDoseParam = healingPotionHealDose
+    override val healingStrongPotionHealDoseParam = healingStrongPotionHealDose
+
     override val epidemicChanceParam = epidemicChance
     override val epidemicInfectedMobSpawnChanceParam = epidemicInfectedMobSpawnChance
+
+    override val playerVirusEffectChanceParam = playerVirusEffectChance
 }

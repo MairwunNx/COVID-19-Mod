@@ -8,6 +8,7 @@ import me.mairwunnx.covid19.api.CoronavirusInfectStatus
 data class CoronavirusModel(
     var coronavirus: Coronavirus = Coronavirus(),
     var loggedInPlayers: MutableList<String> = mutableListOf(),
+    var disinfectedInitially: MutableList<String> = mutableListOf(),
     var players: MutableList<Player> = mutableListOf()
 ) {
     @Serializable
