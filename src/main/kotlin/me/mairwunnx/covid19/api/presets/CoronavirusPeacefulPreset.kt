@@ -4,6 +4,7 @@ import me.mairwunnx.covid19.api.*
 
 object CoronavirusPeacefulPreset : ICoronavirusParameters {
     override val genericInfectDosePerTickParam = genericInfectDosePerTick
+    override val genericDisinfectDosePerTickParam = genericDisinfectDosePerTick
 
     override val infectedMobInfectDosePerTickParam = infectedMobInfectDosePerTick
     override val infectedMobSpawnChanceParam = infectedMobSpawnChance

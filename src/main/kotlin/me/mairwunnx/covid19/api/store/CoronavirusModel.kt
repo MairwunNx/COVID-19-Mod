@@ -6,27 +6,36 @@ import me.mairwunnx.covid19.api.CoronavirusInfectStatus
 
 @Serializable
 data class CoronavirusModel(
-    var coronavirus: Coronavirus = Coronavirus(),
-    var loggedInPlayers: MutableList<String> = mutableListOf(),
-    var disinfectedInitially: MutableList<String> = mutableListOf(),
-    var players: MutableList<Player> = mutableListOf()
+    val coronavirus: Coronavirus = Coronavirus(),
+    val players: MutableList<Player> = mutableListOf()
 ) {
     @Serializable
     data class Coronavirus(
         var deaths: Long = 0,
         var epidemics: Int = 0,
+        var epidemicInfected: Long = 0,
         var finalized: Boolean = false,
         var infected: Long = 0
     )
 
     @Serializable
     data class Player(
-        var hasImmunity: Boolean,
-        var infectInitiator: CoronavirusInfectInitiator,
-        var infectPercent: Double,
-        var infectStatus: CoronavirusInfectStatus,
-        var isDead: Boolean,
         var player: String,
-        var stage: Int
-    )
+        var infectPercent: Double = 0.0,
+        var infectStatus: CoronavirusInfectStatus = CoronavirusInfectStatus.None,
+        var infectInitiator: CoronavirusInfectInitiator = CoronavirusInfectInitiator.None,
+        var hasImmunity: Boolean = false,
+        var infectStage: Int = 0,
+        var isDead: Boolean = false,
+        val meta: Meta = Meta()
+    ) {
+        @Serializable
+        data class Meta(
+            var loggedIn: Boolean = true,
+            var initiallyInfected: Boolean = false,
+            var initiallyDisinfected: Boolean = false,
+            var killing: Boolean = false,
+            var killingTicks: Int = 0
+        )
+    }
 }

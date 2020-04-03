@@ -1,5 +1,11 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package me.mairwunnx.covid19.api
 
+import me.mairwunnx.covid19.api.CoronavirusCache.cachedEffectInstance
+import me.mairwunnx.covid19.api.CoronavirusCache.cachedParameters
+import me.mairwunnx.covid19.api.CoronavirusCache.cachedWorldDifficulty
+import me.mairwunnx.covid19.api.CoronavirusCache.epidemicEffectInstance
 import me.mairwunnx.covid19.api.effects.*
 import me.mairwunnx.covid19.api.presets.*
 import me.mairwunnx.covid19.api.store.CoronavirusModel
@@ -11,13 +17,49 @@ import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
 import kotlin.math.abs
 
+/**
+ * Coronavirus internal API. Currently not able
+ * for interacting with external modules, because
+ * library not distributing on maven repositories.
+ */
 object CoronavirusAPI {
-    private var cachedWorldDifficulty = 2
-    private var cachedParameters: ICoronavirusParameters = CoronavirusMediumPreset
+    /**
+     * Marks entity with infected effect (unluck effect).
+     * @param entity entity to mark infected.
+     */
+    fun markEntityAsInfected(entity: LivingEntity) {
+        val params = getCoronavirusParameters(entity.world.difficulty.id)
+        if (cachedEffectInstance.duration != params.infectedMobInfectDurationParam.toInt()) {
+            cachedEffectInstance = EffectInstance(
+                Effects.UNLUCK,
+                params.infectedMobInfectDurationParam.toInt(),
+                1
+            )
+        }
+        entity.addPotionEffect(cachedEffectInstance)
+    }
 
-    fun getCoronavirusParameters(
-        difficulty: Int
-    ): ICoronavirusParameters {
+    /**
+     * Marks entity with epidemic effect (wither effect).
+     * @param entity entity to mark epidemic.
+     */
+    fun markEntityAsEpidemic(entity: LivingEntity) {
+        val params = getCoronavirusParameters(entity.world.difficulty.id)
+        if (epidemicEffectInstance.duration != params.infectedMobInfectDurationParam.toInt()) {
+            epidemicEffectInstance = EffectInstance(
+                Effects.WITHER,
+                params.infectedMobInfectDurationParam.toInt(),
+                1
+            )
+        }
+        entity.addPotionEffect(epidemicEffectInstance)
+    }
+
+    /**
+     * @param difficulty world difficulty.
+     * @return coronavirus parameters.
+     */
+    fun getCoronavirusParameters(difficulty: Int): ICoronavirusParameters {
         if (difficulty == cachedWorldDifficulty) {
             return cachedParameters
         } else {
@@ -33,6 +75,11 @@ object CoronavirusAPI {
         return cachedParameters
     }
 
+    /**
+     * @param percent player infect percent.
+     * @return coronavirus effect related for specified
+     * infect percent.
+     */
     fun getCoronavirusEffectByPercent(
         percent: Double
     ): ICoronavirusEffect = when (percent) {
@@ -49,150 +96,290 @@ object CoronavirusAPI {
         else -> CoronavirusEffect1
     }
 
-    private var cachedEffectInstance = EffectInstance(
-        Effects.UNLUCK, CoronavirusMediumPreset.infectedMobInfectDurationParam.toInt(), 1
-    )
+    /**
+     * @return coronavirus data model.
+     */
+    fun getCoronavirus() = CoronavirusStore.take().coronavirus
 
-    fun markEntityAsInfected(entity: LivingEntity) {
-        val params = getCoronavirusParameters(entity.world.difficulty.id)
+    /**
+     * @return coronavirus deaths count.
+     */
+    fun getCoronavirusDeaths() = CoronavirusStore.take().coronavirus.deaths
 
-        if (cachedEffectInstance.duration != params.infectedMobInfectDurationParam.toInt()) {
-            cachedEffectInstance = EffectInstance(
-                Effects.UNLUCK,
-                params.infectedMobInfectDurationParam.toInt(),
-                1
-            )
-        }
-        entity.addPotionEffect(cachedEffectInstance)
+    /**
+     * @return coronavirus epidemics count.
+     */
+    fun getCoronavirusEpidemics() = CoronavirusStore.take().coronavirus.epidemics
+
+    /**
+     * @return coronavirus infected entities by epidemic count.
+     */
+    fun getCoronavirusInfectedByEpidemic() = CoronavirusStore.take().coronavirus.epidemicInfected
+
+    /**
+     * @return true if coronavirus finalized otherwise false.
+     */
+    fun isCoronavirusFinalized() = CoronavirusStore.take().coronavirus.finalized
+
+    /**
+     * @return general coronavirus infected entities count.
+     * Includes [getCoronavirusInfectedByEpidemic] method result.
+     */
+    fun getCoronavirusInfected() = CoronavirusStore.take().coronavirus.infected
+
+    /**
+     * @return all infected players.
+     */
+    fun getPlayers() = CoronavirusStore.take().players
+
+    /**
+     * @param name player nickname.
+     * @return player data class instance by nickname. Return
+     * null if player not exist.
+     */
+    fun getPlayer(name: String) = CoronavirusStore.take().players.find {
+        it.player == name
     }
 
-    private var epidemicEffectInstance = EffectInstance(
-        Effects.WITHER, CoronavirusMediumPreset.infectedMobInfectDurationParam.toInt(), 1
-    )
+    /**
+     * @param name player nickname.
+     * @return player infect percent by player name. Return
+     * `0.0` value if player not exist.
+     */
+    fun getInfectPercent(name: String) = getPlayer(name)?.infectPercent ?: 0.0
 
-    fun markEntityAsEpidemic(entity: LivingEntity) {
-        val params = getCoronavirusParameters(entity.world.difficulty.id)
+    /**
+     * @param name player nickname.
+     * @return true if player disinfected (has 0.0
+     * infect percents).
+     */
+    fun isPlayerDisinfected(name: String): Boolean =
+        getPlayer(name)?.infectPercent?.lessOrEquals(disinfectedInfectPercent) ?: true
 
-        if (epidemicEffectInstance.duration != params.infectedMobInfectDurationParam.toInt()) {
-            epidemicEffectInstance = EffectInstance(
-                Effects.WITHER,
-                params.infectedMobInfectDurationParam.toInt(),
-                1
-            )
-        }
-        entity.addPotionEffect(epidemicEffectInstance)
-    }
+    /**
+     * @param name player nickname.
+     * @return player infect status enum element. Return
+     * [CoronavirusInfectStatus.None] if player not exist.
+     */
+    fun getInfectStatus(name: String) =
+        getPlayer(name)?.infectStatus ?: CoronavirusInfectStatus.None
 
-    fun isPlayerInfected(name: String): Boolean {
-        getPlayerData(name)?.let {
-            return it.infectStatus != CoronavirusInfectStatus.None
-        }
-        return false
-    }
+    /**
+     * @param name player nickname.
+     * @return player infect initiator enum element. Return
+     * [CoronavirusInfectInitiator.None] if player not exist.
+     */
+    fun getInfectInitiator(name: String) =
+        getPlayer(name)?.infectInitiator ?: CoronavirusInfectInitiator.None
 
+    /**
+     * @param name player nickname.
+     * @return true if player has immunity to coronavirus.
+     */
+    fun isPlayerHasImmunity(name: String) = getPlayer(name)?.hasImmunity ?: false
+
+    /**
+     * @param name player nickname.
+     * @return player infect stage.
+     */
+    fun getPlayerInfectStage(name: String) = getPlayer(name)?.infectStage ?: 0
+
+    /**
+     * @param name player nickname.
+     * @return true if player dead by coronavirus.
+     */
+    fun isPlayerDead(name: String) = getPlayer(name)?.isDead ?: false
+
+    /**
+     * @param name player nickname.
+     * @return player meta data class. Return null if player not exist.
+     */
+    fun getPlayerMeta(name: String) = getPlayer(name)?.meta
+
+    /**
+     * @param name player nickname.
+     * @return return true if player logged-in in world.
+     */
+    fun getMetaIsLoggedIn(name: String) = getPlayer(name)?.meta?.loggedIn ?: false
+
+    /**
+     * @param name player nickname.
+     * @return return true if player was infected.
+     */
+    fun getMetaIsInitiallyInfected(name: String) = getPlayer(name)?.meta?.initiallyInfected ?: false
+
+    /**
+     * @param name player nickname.
+     * @return return true if player was disinfected.
+     */
+    fun getMetaIsInitiallyDisinfected(name: String) =
+        getPlayer(name)?.meta?.initiallyDisinfected ?: false
+
+    /**
+     * @param name player nickname.
+     * @return return true if player killing by coronavirus.
+     */
+    fun getMetaIsKilling(name: String) = getPlayer(name)?.meta?.killing ?: false
+
+    /**
+     * @param name player nickname.
+     * @return return passed ticks while player killed.
+     */
+    fun getMetaKillingTicks(name: String) = getPlayer(name)?.meta?.killingTicks ?: 0
+
+    /**
+     * @param entity target entity to check.
+     * @param isEpidemic is epidemic entity?
+     * @return true if entity infected or epidemic
+     * if [isEpidemic] is true.
+     */
     fun isEntityInfected(
         entity: LivingEntity, isEpidemic: Boolean = false
     ): Boolean = when (entity) {
         is BatEntity -> true
-        else -> entity.activePotionEffects.map {
-            it.effectName
-        }.contains(if (!isEpidemic) Effects.WITHER.name else Effects.UNLUCK.name)
+        else -> entity.activePotionEffects.map { it.effectName }.contains(
+            if (isEpidemic) Effects.WITHER.name else Effects.UNLUCK.name
+        )
     }
 
-    fun getInfectInitiatorType(
+    /**
+     * @param entity target entity to check "who is?".
+     * @return [CoronavirusInfectInitiator] enum element.
+     * Return [CoronavirusInfectInitiator.Player] if initiator
+     * instance of [ServerPlayerEntity], otherwise return
+     * [CoronavirusInfectInitiator.Entity].
+     */
+    fun processInfectInitiator(
         entity: LivingEntity
     ): CoronavirusInfectInitiator = when (entity) {
         is ServerPlayerEntity -> CoronavirusInfectInitiator.Player
         else -> CoronavirusInfectInitiator.Entity
     }
 
-    fun getPlayerInfectInitiator(name: String): CoronavirusInfectInitiator? =
-        getPlayerData(name)?.let { return it.infectInitiator }
-
+    /**
+     * Disinfect target player with specified dose.
+     * @param name target player name to disinfect.
+     * @param dose disinfect dose.
+     */
     fun disinfectPlayer(name: String, dose: Double) {
-        getPlayerData(name)?.let {
+        getPlayer(name)?.let {
             if (!isPlayerDisinfected(name)) {
-                if (!getDisinfectedInitiallyPlayers().contains(name)) {
-                    getDisinfectedInitiallyPlayers().add(name)
+                if (!isPlayerDisinfected(name)) {
+                    it.meta.initiallyDisinfected = true
                 }
 
                 it.infectPercent -= dose
-                it.stage = (it.infectPercent * 0.1).toInt() + 1
+                it.infectStage = (it.infectPercent * 0.1).toInt() + 1
 
-                // Checking status again after decrement infect percent.
+                // Note ↓: Checking status again after decrement infect percent.
                 if (isPlayerDisinfected(name)) {
                     it.infectStatus = CoronavirusInfectStatus.None
                     it.hasImmunity = true
                     it.infectPercent = disinfectedInfectPercent
-                    it.stage = disinfectedInfectStage
+                    it.infectStage = disinfectedInfectStage
                 }
             }
         }
     }
 
+    /**
+     * Infect target player with specified dose.
+     * @param name target player name to infect.
+     * @param dose infect dose.
+     */
     fun infectPlayer(name: String, dose: Double) {
-        getPlayerData(name)?.let {
+        getPlayer(name)?.let {
             it.infectPercent += dose
-            it.stage = (it.infectPercent * 0.1).toInt() + 1
+            it.infectStage = (it.infectPercent * 0.1).toInt() + 1
 
             if (isPlayerDead(name)) {
-                it.infectPercent = 100.0
-                it.stage = 10
+                it.infectPercent = infectedInfectPercent
+                it.infectStage = infectedInfectStage
                 it.isDead = true
-                // Calling ban function with reason.
+                it.meta.killing = true
             }
         }
     }
 
-    fun isPlayerDead(name: String): Boolean {
-        getPlayerData(name)?.let {
-            return it.infectPercent greatOrEquals 100.0 || it.isDead
-        } ?: return false
+    /**
+     * Force install infect percents to player.
+     * @param name target player name.
+     * @param percent new percent value.
+     */
+    fun setInfectPercent(name: String, percent: Double) {
+        getPlayer(name)?.let {
+            it.infectPercent = percent
+            it.infectStage = (it.infectPercent * 0.1).toInt() + 1
+            it.isDead = it.infectPercent greatOrEquals infectedInfectPercent
+            it.meta.killing = it.infectPercent greatOrEquals infectedInfectPercent
+        }
     }
 
-    fun isPlayerDisinfected(name: String): Boolean {
-        getPlayerData(name)?.let { return it.infectPercent lessOrEquals 0.0 } ?: return true
-    }
-
+    /**
+     * Infects player initially. (Adds player data).
+     * @param name player name.
+     * @param initiator infect initiator.
+     */
     fun infectPlayerInitially(
         name: String,
         initiator: CoronavirusInfectInitiator
-    ) {
-        getPlayerData(name).let {
-            if (it == null) {
-                addPlayerData(
-                    CoronavirusModel.Player(
-                        false, initiator, 0.0, CoronavirusInfectStatus.Actively, false, name, 1
-                    )
-                )
-            } else {
-                it.infectStatus = CoronavirusInfectStatus.Actively
-                it.infectInitiator = initiator
+    ) = getPlayer(name)?.let {
+        it.infectStatus = CoronavirusInfectStatus.Actively
+        it.infectInitiator = initiator
+    } ?: run {
+        addPlayerData(
+            CoronavirusModel.Player(
+                player = name,
+                infectStatus = CoronavirusInfectStatus.Actively,
+                infectInitiator = initiator
+            ).apply {
+                this.meta.initiallyInfected = true
             }
-        }
+        )
     }
 
+    /**
+     * Add new player to [CoronavirusModel.Player] data class.
+     * @param model player data model.
+     */
     fun addPlayerData(model: CoronavirusModel.Player) {
-        if (!isPlayerExist(model.player)) CoronavirusStore.take().players.add(model)
+        if (!isPlayerExist(model.player)) getPlayers().add(model)
     }
 
-    fun getPlayerData(name: String): CoronavirusModel.Player? =
-        CoronavirusStore.take().players.find { it.player == name }
+    /**
+     * @param name player name.
+     * @return true if player exits.
+     */
+    fun isPlayerExist(name: String): Boolean = getPlayer(name) != null
 
-    fun isPlayerExist(name: String): Boolean {
-        getPlayerData(name)?.let { return true } ?: return false
+    /**
+     * Do refresh player killing ticks.
+     * @param name player name.
+     */
+    fun refreshPlayerKillingTick(name: String) {
+        getPlayer(name)?.let { it.meta.killingTicks = initialKillingTicks }
     }
 
-    fun isPlayerLoggedIn(name: String) = getLoggedInPlayers().contains(name)
-    fun setPlayerLoggedIn(name: String) = getLoggedInPlayers().add(name)
-    fun getLoggedInPlayers() = CoronavirusStore.take().loggedInPlayers
-    fun getCoronavirus() = CoronavirusStore.take().coronavirus
-    fun getDisinfectedInitiallyPlayers() = CoronavirusStore.take().disinfectedInitially
-    fun getPlayers() = CoronavirusStore.take().players
-    fun getPlayerStage(name: String): Int? = getPlayerData(name)?.stage
-    fun getPlayerPercent(name: String): Double? = getPlayerData(name)?.infectPercent
+    /**
+     * Adds player killing tick with value.
+     * @param name player name.
+     */
+    fun addPlayerKillingTick(name: String) {
+        getPlayer(name)?.let { it.meta.killingTicks++ }
+    }
 
+    /**
+     * @return true if double value less or equals.
+     */
     infix fun Double.lessOrEquals(other: Double) = this < other || this.equal(other)
+
+    /**
+     * @return true if double value greatness or equals.
+     */
     infix fun Double.greatOrEquals(other: Double) = this > other || this.equal(other)
+
+    /**
+     * @return true if double value equals.
+     */
     infix fun Double.equal(other: Double) = abs(this - other) < 0.000001
 }

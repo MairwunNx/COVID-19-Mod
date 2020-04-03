@@ -1,6 +1,7 @@
 package me.mairwunnx.covid19.api.effects
 
 import me.mairwunnx.covid19.api.playerInfectedEffectModifier
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
@@ -26,7 +27,7 @@ object CoronavirusEffect9 : ICoronavirusEffect {
         EffectInstance(Effects.WITHER, (witherDurationTicks).roundToInt(), 1)
     )
 
-    override fun apply(target: ServerPlayerEntity) {
+    override fun apply(target: PlayerEntity) {
         effects.forEach { target.addPotionEffect(it) }
     }
 }

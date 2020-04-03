@@ -8,6 +8,9 @@ object CoronavirusHardPreset : ICoronavirusParameters {
     override val genericInfectDosePerTickParam =
         prevPreset.genericInfectDosePerTickParam * genericInfectDosePerTickModifier
 
+    override val genericDisinfectDosePerTickParam =
+        prevPreset.genericDisinfectDosePerTickParam * genericDisinfectDosePerTickModifier
+
     override val infectedMobInfectDosePerTickParam =
         prevPreset.infectedMobInfectDosePerTickParam * infectedMobInfectDosePerTickModifier
     override val infectedMobSpawnChanceParam =
