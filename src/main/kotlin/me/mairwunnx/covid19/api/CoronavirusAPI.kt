@@ -107,6 +107,16 @@ object CoronavirusAPI {
     fun getCoronavirusDeaths() = CoronavirusStore.take().coronavirus.deaths
 
     /**
+     * @return true if now is epidemic.
+     */
+    fun isCoronavirusEpidemicNow() = CoronavirusStore.take().coronavirus.epidemic
+
+    /**
+     * @return ticks count as last epidemic duration.
+     */
+    fun getCoronavirusLastEpidemicTime() = CoronavirusStore.take().coronavirus.lastEpidemicTime
+
+    /**
      * @return coronavirus epidemics count.
      */
     fun getCoronavirusEpidemics() = CoronavirusStore.take().coronavirus.epidemics
@@ -292,10 +302,9 @@ object CoronavirusAPI {
             it.infectPercent += dose
             it.infectStage = (it.infectPercent * 0.1).toInt() + 1
 
-            if (isPlayerDead(name)) {
+            if (it.infectPercent greatOrEquals infectedInfectPercent) {
                 it.infectPercent = infectedInfectPercent
                 it.infectStage = infectedInfectStage
-                it.isDead = true
                 it.meta.killing = true
             }
         }
@@ -310,7 +319,6 @@ object CoronavirusAPI {
         getPlayer(name)?.let {
             it.infectPercent = percent
             it.infectStage = (it.infectPercent * 0.1).toInt() + 1
-            it.isDead = it.infectPercent greatOrEquals infectedInfectPercent
             it.meta.killing = it.infectPercent greatOrEquals infectedInfectPercent
         }
     }
@@ -326,6 +334,7 @@ object CoronavirusAPI {
     ) = getPlayer(name)?.let {
         it.infectStatus = CoronavirusInfectStatus.Actively
         it.infectInitiator = initiator
+        it.meta.initiallyInfected = true
     } ?: run {
         addPlayerData(
             CoronavirusModel.Player(
@@ -365,7 +374,7 @@ object CoronavirusAPI {
      * @param name player name.
      */
     fun addPlayerKillingTick(name: String) {
-        getPlayer(name)?.let { it.meta.killingTicks++ }
+        getPlayer(name)?.let { it.meta.killingTicks += 1 }
     }
 
     /**

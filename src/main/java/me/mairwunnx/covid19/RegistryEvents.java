@@ -14,13 +14,13 @@ public class RegistryEvents {
     public static void onBlocksRegistry(
         final RegistryEvent.Register<Block> event
     ) {
-        EntryPoint.RegistryEvents.INSTANCE.onBlocksRegistry(event);
+//        EntryPoint.RegistryEvents.INSTANCE.onBlocksRegistry(event);
     }
 
     @SubscribeEvent
     public static void onItemsRegistry(
         final RegistryEvent.Register<Item> event
     ) {
-        EntryPoint.RegistryEvents.INSTANCE.onItemsRegistry(event);
+//        EntryPoint.RegistryEvents.INSTANCE.onItemsRegistry(event);
     }
 }

@@ -1,7 +1,6 @@
 package me.mairwunnx.covid19
 
 import me.mairwunnx.covid19.api.CoronavirusAPI
-import me.mairwunnx.covid19.api.CoronavirusTemporaryState
 import me.mairwunnx.covid19.api.withChance
 import net.minecraft.entity.merchant.villager.VillagerEntity
 import net.minecraft.entity.monster.*
@@ -30,7 +29,7 @@ object EntitySpawnHandler {
                 event.world.difficulty.id
             )
 
-            if (CoronavirusTemporaryState.epidemic) {
+            if (CoronavirusAPI.isCoronavirusEpidemicNow()) {
                 withChance(params.epidemicInfectedMobSpawnChanceParam) {
                     CoronavirusAPI.getCoronavirus().infected++
                     CoronavirusAPI.getCoronavirus().epidemicInfected++

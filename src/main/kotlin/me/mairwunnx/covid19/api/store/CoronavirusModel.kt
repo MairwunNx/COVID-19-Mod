@@ -12,6 +12,8 @@ data class CoronavirusModel(
     @Serializable
     data class Coronavirus(
         var deaths: Long = 0,
+        var epidemic: Boolean = false,
+        var lastEpidemicTime: Long = 0,
         var epidemics: Int = 0,
         var epidemicInfected: Long = 0,
         var finalized: Boolean = false,

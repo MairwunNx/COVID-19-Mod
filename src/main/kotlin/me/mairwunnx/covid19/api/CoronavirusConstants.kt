@@ -2,9 +2,6 @@ package me.mairwunnx.covid19.api
 
 const val playerJoinLightningRowDistance = 12
 
-const val infectedEntityChecksEveryTicks = 5
-const val epidemicChanceChecksEveryTicks = 2
-const val playerVirusChecksEveryTicks = 5
 const val playerKillingDamageEveryTicks = 20
 
 const val coronavirusInfectStages = 10
@@ -12,7 +9,7 @@ const val coronavirusInfectStages = 10
 const val disinfectedInfectPercent = 0.0
 const val disinfectedInfectStage = 0
 const val infectedInfectPercent = 100.0
-const val infectedInfectStage = 10
+const val infectedInfectStage = 9
 const val initialKillingTicks = 0
 const val pardonKillingTicks = 300
 
@@ -67,6 +64,8 @@ const val infectedEatInfectDoseModifier = 1.6
 const val epidemicChance = 0.000001
 const val epidemicInfectedMobSpawnChance = 0.001
 const val epidemicInfectedMobSpawnChanceModifier = 1.75
+const val epidemicDurationTicks = 3600L
+const val epidemicDurationTicksModifier = 800L
 
 const val playerVirusEffectChance = 0.00001
 const val playerVirusEffectChanceModifier = 1.5
