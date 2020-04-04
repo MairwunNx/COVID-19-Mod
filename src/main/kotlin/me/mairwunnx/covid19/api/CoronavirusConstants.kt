@@ -28,7 +28,7 @@ const val infectedMobSpawnChanceModifier = 1.75
 const val infectedMobInfectDuration = 4800.0
 const val infectedMobInfectDurationModifier = 1.25
 const val infectedMobInfectRange = 2.2
-const val infectedMobInfectRangeModifier = 1.75
+const val infectedMobInfectRangeModifier = 1.35
 const val infectedMobInfectEntityChance = 0.01
 const val infectedMobInfectEntityModifier = 2.2
 const val infectedMobInitiallyInfectEntityChance = 0.0005
@@ -59,13 +59,13 @@ const val infectedEatChanceModifier = 1.75
 const val infectedEatInfectDose = 0.8
 const val infectedEatInfectDoseModifier = 1.6
 
-const val epidemicChance = 0.000082
+const val epidemicChance = 0.000062
 const val epidemicInfectedMobSpawnChance = 0.0002
 const val epidemicInfectedMobSpawnChanceModifier = 1.75
 const val epidemicDurationTicks = 3600L
 const val epidemicDurationTicksModifier = 800L
 
-const val playerVirusEffectChance = 0.0000565
+const val playerVirusEffectChance = 0.0000765
 const val playerVirusEffectChanceModifier = 1.5
 
 const val playerDyingDamagePerSecond = 0.35f

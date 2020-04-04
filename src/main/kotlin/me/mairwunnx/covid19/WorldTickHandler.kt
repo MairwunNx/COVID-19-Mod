@@ -44,12 +44,16 @@ object WorldTickHandler {
                     event.world.players.forEach {
                         playSound(it, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
                     }
+                    event.world.players.forEach {
+                        it.attackEntityFrom(DamageSource.MAGIC, 2.0f)
+                    }
                     event.world.server?.playerList?.sendMessage(epidemicStartMessage)
                 }
             } else {
                 CoronavirusAPI.getCoronavirus().lastEpidemicTime += 1
                 if (CoronavirusAPI.getCoronavirusLastEpidemicTime() >= duration) {
                     CoronavirusAPI.getCoronavirus().epidemic = false
+                    CoronavirusAPI.getCoronavirus().lastEpidemicTime = 0
                     CoronavirusAPI.getCoronavirus().epidemics++
                     event.world.server?.playerList?.sendMessage(epidemicStopMessage)
                 }

@@ -2,7 +2,6 @@ package me.mairwunnx.covid19.api.effects
 
 import me.mairwunnx.covid19.api.playerInfectedEffectModifier
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
 import kotlin.math.roundToInt

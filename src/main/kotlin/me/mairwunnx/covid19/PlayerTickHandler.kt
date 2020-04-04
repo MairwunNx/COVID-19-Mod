@@ -1,6 +1,7 @@
 package me.mairwunnx.covid19
 
 import me.mairwunnx.covid19.api.*
+import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.SoundEvents
 import net.minecraftforge.event.TickEvent
@@ -24,6 +25,7 @@ object PlayerTickHandler {
                 CoronavirusAPI.getCoronavirusEffectByPercent(
                     CoronavirusAPI.getInfectPercent(name)
                 ).apply(event.player)
+                event.player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
                 playSound(event.player, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
             }
         }
