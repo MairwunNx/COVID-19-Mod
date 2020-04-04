@@ -76,10 +76,13 @@ fun playSound(
     player: PlayerEntity,
     soundEvent: SoundEvent,
     soundCategory: SoundCategory,
-    volume: Float = 0.8f
+    volume: Float = 0.8f,
+    // It need for not calling `Minecraft#world`
+    // before world loading.
+    ignoreWorld: Boolean = false
 ) {
     DistExecutor.runWhenOn(Dist.CLIENT) {
-        Runnable {
+        if (!ignoreWorld) {
             Minecraft.getInstance().world.playSound(
                 player.position.x.toDouble(),
                 player.position.y + player.eyeHeight.toDouble(),
@@ -90,8 +93,8 @@ fun playSound(
                 1.0f,
                 false
             )
-            player.entity.playSound(soundEvent, volume, 1.0f)
         }
+        Runnable { player.entity.playSound(soundEvent, volume, 1.0f) }
     }
 
     DistExecutor.runWhenOn(Dist.DEDICATED_SERVER) {
@@ -110,24 +113,41 @@ fun playSound(
     }
 }
 
+private val virusStateHashMap: HashMap<String, MutableSet<Double>> = hashMapOf()
+
+/**
+ * It calls in server shutting down event.
+ * Basically need for evasion of coronavirus world data conflicting
+ * in the same minecraft session.
+ */
+fun purgeVirusStateMap() = virusStateHashMap.clear()
+
 /**
  * Updates virus state for specified player.
  * @param name target player name.
  */
 fun updatePlayerVirusState(name: String) {
-    if (CoronavirusTemporaryState.virusStateHashMap[name] != null) {
-        CoronavirusTemporaryState.virusStateHashMap[name]?.add(CoronavirusAPI.getInfectPercent(name))
+    if (virusStateHashMap[name] != null) {
+        virusStateHashMap[name]?.add(CoronavirusAPI.getInfectPercent(name))
+
+        if (virusStateHashMap[name]?.count()!! > 4) {
+            virusStateHashMap[name]?.remove(
+                virusStateHashMap[name]?.first()
+            )
+        }
     } else {
-        CoronavirusTemporaryState.virusStateHashMap[name] = hashSetOf()
+        virusStateHashMap[name] = hashSetOf()
     }
 
     val equalsDelta = 0.0001
-    val values = CoronavirusTemporaryState.virusStateHashMap[name]!!
+    val values = virusStateHashMap[name]!!
 
-    CoronavirusAPI.getPlayer(name)?.infectStatus = when {
-        abs(values.last() - values.elementAt(values.count() - 2)) < equalsDelta -> CoronavirusInfectStatus.Suspended
-        values.last() > values.elementAt(values.count() - 2) -> CoronavirusInfectStatus.Actively
-        values.last() < values.elementAt(values.count() - 2) -> CoronavirusInfectStatus.Recession
-        else -> CoronavirusInfectStatus.Suspended
+    if (values.count() >= 3) {
+        CoronavirusAPI.getPlayer(name)?.infectStatus = when {
+            abs(values.last() - values.elementAt(values.size - 2)) < equalsDelta -> CoronavirusInfectStatus.Suspended
+            values.last() > values.elementAt(values.size - 2) -> CoronavirusInfectStatus.Actively
+            values.last() < values.elementAt(values.size - 2) -> CoronavirusInfectStatus.Recession
+            else -> CoronavirusInfectStatus.Suspended
+        }
     }
 }

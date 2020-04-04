@@ -1,5 +1,6 @@
 package me.mairwunnx.covid19
 
+import me.mairwunnx.covid19.api.purgeVirusStateMap
 import me.mairwunnx.covid19.api.store.CoronavirusStore
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.eventbus.api.SubscribeEvent
@@ -16,7 +17,10 @@ object ServerEventHandler {
     @SubscribeEvent
     fun onServerShuttingDown(
         @Suppress("UNUSED_PARAMETER") event: FMLServerStoppingEvent
-    ) = CoronavirusStore.save()
+    ) {
+        CoronavirusStore.save()
+        purgeVirusStateMap()
+    }
 
     private fun initializeCoronavirusStore(event: FMLServerStartingEvent) {
         DistExecutor.runWhenOn(Dist.CLIENT) {

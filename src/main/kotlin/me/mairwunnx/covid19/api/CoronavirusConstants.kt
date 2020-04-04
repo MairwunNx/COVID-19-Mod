@@ -71,3 +71,4 @@ const val playerVirusEffectChance = 0.00001
 const val playerVirusEffectChanceModifier = 1.5
 
 const val playerDyingDamagePerSecond = 0.35f
+const val playerMinimalMaxValueToImmunity = 23.69 // =)

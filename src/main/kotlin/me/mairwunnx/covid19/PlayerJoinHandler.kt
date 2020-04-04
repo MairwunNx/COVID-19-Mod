@@ -50,8 +50,12 @@ object PlayerJoinHandler {
             }
 
             player.sendMessage(welcomeMessage)
-            player.playSound(SoundEvents.ENTITY_WITHER_SPAWN, 0.5f, 1.0f)
-            playSound(player, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+            playSound(
+                player = player,
+                soundEvent = SoundEvents.ENTITY_WITHER_SPAWN,
+                soundCategory = SoundCategory.AMBIENT,
+                ignoreWorld = true
+            )
         }
     }
 

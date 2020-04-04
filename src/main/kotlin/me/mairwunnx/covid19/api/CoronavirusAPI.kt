@@ -238,6 +238,12 @@ object CoronavirusAPI {
     fun getMetaKillingTicks(name: String) = getPlayer(name)?.meta?.killingTicks ?: 0
 
     /**
+     * @param name player nickname.
+     * @return return infect maximum value of player as percents.
+     */
+    fun getInfectMaxPercent(name: String) = getPlayer(name)?.meta?.infectMaxPercent ?: 0.0
+
+    /**
      * @param entity target entity to check.
      * @param isEpidemic is epidemic entity?
      * @return true if entity infected or epidemic
@@ -284,9 +290,10 @@ object CoronavirusAPI {
                 // Note ↓: Checking status again after decrement infect percent.
                 if (isPlayerDisinfected(name)) {
                     it.infectStatus = CoronavirusInfectStatus.None
-                    it.hasImmunity = true
                     it.infectPercent = disinfectedInfectPercent
                     it.infectStage = disinfectedInfectStage
+                    it.hasImmunity =
+                        getInfectMaxPercent(name) greatOrEquals playerMinimalMaxValueToImmunity
                 }
             }
         }
@@ -301,6 +308,10 @@ object CoronavirusAPI {
         getPlayer(name)?.let {
             it.infectPercent += dose
             it.infectStage = (it.infectPercent * 0.1).toInt() + 1
+
+            if (it.meta.infectMaxPercent lessOrEquals it.infectPercent) {
+                it.meta.infectMaxPercent = it.infectPercent
+            }
 
             if (it.infectPercent greatOrEquals infectedInfectPercent) {
                 it.infectPercent = infectedInfectPercent
@@ -319,6 +330,9 @@ object CoronavirusAPI {
         getPlayer(name)?.let {
             it.infectPercent = percent
             it.infectStage = (it.infectPercent * 0.1).toInt() + 1
+            if (it.meta.infectMaxPercent lessOrEquals it.infectPercent) {
+                it.meta.infectMaxPercent = it.infectPercent
+            }
             it.meta.killing = it.infectPercent greatOrEquals infectedInfectPercent
         }
     }
