@@ -19,4 +19,5 @@ interface ICoronavirusParameters {
     val epidemicChanceParam: Double
     val epidemicInfectedMobSpawnChanceParam: Double
     val playerVirusEffectChanceParam: Double
+    val coronavirusRebornChanceParam: Double
 }

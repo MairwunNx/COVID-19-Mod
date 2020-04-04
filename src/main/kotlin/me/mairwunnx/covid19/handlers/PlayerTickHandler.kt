@@ -22,11 +22,12 @@ object PlayerTickHandler {
         // todo: create minimal time cooldown for chance checking. (e.g 1 - 2min) and decrement time by difficulty.
         if (CoronavirusAPI.getInfectPercent(name) > 1) {
             withChance(params.playerVirusEffectChanceParam) {
+                event.player.clearActivePotions()
                 CoronavirusAPI.getCoronavirusEffectByPercent(
                     CoronavirusAPI.getInfectPercent(name)
                 ).apply(event.player)
                 event.player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
-                playSound(event.player, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+                playSound(event.player, SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.AMBIENT)
             }
         }
 

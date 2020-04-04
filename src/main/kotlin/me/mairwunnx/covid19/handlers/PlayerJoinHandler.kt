@@ -22,40 +22,48 @@ object PlayerJoinHandler {
         val player = event.player
         val name = player.name.string
 
+        if (CoronavirusAPI.isPlayerDead(name)) {
+            event.player.server?.playerList?.players?.find {
+                it.name.string == name
+            }?.connection?.disconnect(PlayerDeathHandler.diedMessage)
+        }
+
         if (!CoronavirusAPI.getMetaIsLoggedIn(name)) {
             CoronavirusAPI.addPlayerData(CoronavirusModel.Player(name))
 
-            repeat(2) { row ->
-                for (lightning in 1..4) {
-                    val lightningInstance = LightningBoltEntity(
-                        player.world,
-                        when {
-                            !isEvenNumber(lightning) -> getLightningPosByRow(
-                                player.posX, row, lightning
-                            )
-                            else -> player.posX
-                        },
-                        player.posY,
-                        when {
-                            isEvenNumber(lightning) -> getLightningPosByRow(
-                                player.posZ, row, lightning
-                            )
-                            else -> player.posZ
-                        },
-                        true
-                    )
-                    (player.world as ServerWorld).addLightningBolt(lightningInstance)
-                    player.onStruckByLightning(lightningInstance)
+            if (!CoronavirusAPI.isCoronavirusFinalized()) {
+                repeat(2) { row ->
+                    for (lightning in 1..4) {
+                        val lightningInstance = LightningBoltEntity(
+                            player.world,
+                            when {
+                                !isEvenNumber(lightning) -> getLightningPosByRow(
+                                    player.posX, row, lightning
+                                )
+                                else -> player.posX
+                            },
+                            player.posY,
+                            when {
+                                isEvenNumber(lightning) -> getLightningPosByRow(
+                                    player.posZ, row, lightning
+                                )
+                                else -> player.posZ
+                            },
+                            true
+                        )
+                        (player.world as ServerWorld).addLightningBolt(lightningInstance)
+                        player.onStruckByLightning(lightningInstance)
+                    }
                 }
-            }
 
-            player.sendMessage(welcomeMessage)
-            playSound(
-                player = player,
-                soundEvent = SoundEvents.ENTITY_WITHER_SPAWN,
-                soundCategory = SoundCategory.AMBIENT,
-                ignoreWorld = true
-            )
+                player.sendMessage(welcomeMessage)
+                playSound(
+                    player = player,
+                    soundEvent = SoundEvents.ENTITY_WITHER_SPAWN,
+                    soundCategory = SoundCategory.AMBIENT,
+                    ignoreWorld = true
+                )
+            }
         }
     }
 

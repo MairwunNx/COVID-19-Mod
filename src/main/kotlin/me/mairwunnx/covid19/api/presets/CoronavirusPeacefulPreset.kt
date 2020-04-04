@@ -27,4 +27,6 @@ object CoronavirusPeacefulPreset : ICoronavirusParameters {
     override val epidemicInfectedMobSpawnChanceParam = epidemicInfectedMobSpawnChance
 
     override val playerVirusEffectChanceParam = playerVirusEffectChance
+
+    override val coronavirusRebornChanceParam = coronavirusRebornChance
 }

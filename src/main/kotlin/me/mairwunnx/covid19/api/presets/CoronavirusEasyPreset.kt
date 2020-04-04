@@ -46,4 +46,7 @@ object CoronavirusEasyPreset : ICoronavirusParameters {
 
     override val playerVirusEffectChanceParam =
         prevPreset.playerVirusEffectChanceParam * playerVirusEffectChanceModifier
+
+    override val coronavirusRebornChanceParam =
+        prevPreset.coronavirusRebornChanceParam * coronavirusRebornChanceModifier
 }

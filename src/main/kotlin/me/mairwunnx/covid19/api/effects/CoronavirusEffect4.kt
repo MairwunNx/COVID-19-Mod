@@ -2,10 +2,8 @@ package me.mairwunnx.covid19.api.effects
 
 import me.mairwunnx.covid19.api.playerInfectedEffectModifier
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
-import kotlin.math.roundToInt
 
 object CoronavirusEffect4 : ICoronavirusEffect {
     const val nauseaDurationTicks =
@@ -15,13 +13,13 @@ object CoronavirusEffect4 : ICoronavirusEffect {
     const val weaknessDurationTicks =
         CoronavirusEffect3.weaknessDurationTicks * playerInfectedEffectModifier
 
-    override val effects: ArrayList<EffectInstance> = arrayListOf(
-        EffectInstance(Effects.NAUSEA, (nauseaDurationTicks).roundToInt(), 1),
-        EffectInstance(Effects.SLOWNESS, (slownessDurationTicks).roundToInt(), 1),
-        EffectInstance(Effects.WEAKNESS, (weaknessDurationTicks).roundToInt(), 1)
+    override fun getEffects() = arrayListOf(
+        EffectInstance(Effects.NAUSEA, nauseaDurationTicks.toInt(), 1),
+        EffectInstance(Effects.SLOWNESS, slownessDurationTicks.toInt(), 1),
+        EffectInstance(Effects.WEAKNESS, weaknessDurationTicks.toInt(), 1)
     )
 
     override fun apply(target: PlayerEntity) {
-        effects.forEach { target.addPotionEffect(it) }
+        getEffects().forEach { target.addPotionEffect(it) }
     }
 }

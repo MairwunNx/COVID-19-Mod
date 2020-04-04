@@ -252,7 +252,7 @@ object CoronavirusAPI {
     fun isEntityInfected(
         entity: LivingEntity, isEpidemic: Boolean = false
     ): Boolean = when (entity) {
-        is BatEntity -> true
+        is BatEntity -> !isCoronavirusFinalized()
         else -> entity.activePotionEffects.map { it.effectName }.contains(
             if (isEpidemic) Effects.WITHER.name else Effects.UNLUCK.name
         )

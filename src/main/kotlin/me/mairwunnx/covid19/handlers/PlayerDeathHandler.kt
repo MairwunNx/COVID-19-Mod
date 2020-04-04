@@ -11,7 +11,7 @@ object PlayerDeathHandler {
     private var reasonMessage = TranslationTextComponent(
         "covid.ban.reason"
     ).unformattedComponentText
-    private val diedMessage = TranslationTextComponent("covid.player.died")
+    val diedMessage = TranslationTextComponent("covid.player.died")
 
     @SubscribeEvent
     @Suppress("unused")

@@ -25,20 +25,22 @@ object EntitySpawnHandler {
             event.entity is CaveSpiderEntity ||
             event.entity is EvokerEntity
         ) {
-            val params = CoronavirusAPI.getCoronavirusParameters(
-                event.world.difficulty.id
-            )
+            if (!CoronavirusAPI.isCoronavirusFinalized()) {
+                val params = CoronavirusAPI.getCoronavirusParameters(
+                    event.world.difficulty.id
+                )
 
-            if (CoronavirusAPI.isCoronavirusEpidemicNow()) {
-                withChance(params.epidemicInfectedMobSpawnChanceParam) {
-                    CoronavirusAPI.getCoronavirus().infected++
-                    CoronavirusAPI.getCoronavirus().epidemicInfected++
-                    CoronavirusAPI.markEntityAsEpidemic(event.entityLiving)
-                }
-            } else {
-                withChance(params.infectedMobSpawnChanceParam) {
-                    CoronavirusAPI.getCoronavirus().infected++
-                    CoronavirusAPI.markEntityAsInfected(event.entityLiving)
+                if (CoronavirusAPI.isCoronavirusEpidemicNow()) {
+                    withChance(params.epidemicInfectedMobSpawnChanceParam) {
+                        CoronavirusAPI.getCoronavirus().infected++
+                        CoronavirusAPI.getCoronavirus().epidemicInfected++
+                        CoronavirusAPI.markEntityAsEpidemic(event.entityLiving)
+                    }
+                } else {
+                    withChance(params.infectedMobSpawnChanceParam) {
+                        CoronavirusAPI.getCoronavirus().infected++
+                        CoronavirusAPI.markEntityAsInfected(event.entityLiving)
+                    }
                 }
             }
         }

@@ -33,18 +33,38 @@ object PlayerEatHandler {
         val player = event.entityLiving as ServerPlayerEntity
 
         if (CoronavirusAPI.getMetaIsInitiallyInfected(player.name.string)) {
-            withChance(params.infectedMobInfectEntityChanceParam) {
-                CoronavirusAPI.infectPlayer(
-                    player.name.string, params.infectedEatInfectDoseParam
-                )
+            if (!CoronavirusAPI.isCoronavirusFinalized()) {
+                withChance(params.infectedEatChanceParam) {
+                    CoronavirusAPI.infectPlayer(
+                        player.name.string, params.infectedEatInfectDoseParam
+                    )
+                }
+            } else {
+                withChance(params.coronavirusRebornChanceParam) {
+                    CoronavirusAPI.infectPlayer(
+                        player.name.string, params.infectedEatInfectDoseParam * 2.8
+                    )
+                    CoronavirusAPI.getCoronavirus().finalized = false
+                    // todo: send message to all players what coronavirus reborned by eating not cooked eat by player <name>.
+                }
             }
         } else {
-            withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
-                CoronavirusAPI.getCoronavirus().infected++
-                CoronavirusAPI.infectPlayerInitially(
-                    player.name.string, CoronavirusInfectInitiator.Eat
-                )
-                player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
+            if (!CoronavirusAPI.isCoronavirusFinalized()) {
+                withChance(params.infectedEatChanceParam) {
+                    CoronavirusAPI.getCoronavirus().infected++
+                    CoronavirusAPI.infectPlayerInitially(
+                        player.name.string, CoronavirusInfectInitiator.Eat
+                    )
+                    player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
+                }
+            } else {
+                withChance(params.coronavirusRebornChanceParam) {
+                    CoronavirusAPI.infectPlayer(
+                        player.name.string, params.infectedEatInfectDoseParam * 4.4
+                    )
+                    CoronavirusAPI.getCoronavirus().finalized = false
+                    // todo: send message to all players what coronavirus reborned by eating not cooked eat by player <name>.
+                }
             }
         }
     }

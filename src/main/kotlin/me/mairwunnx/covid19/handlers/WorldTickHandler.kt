@@ -30,32 +30,33 @@ object WorldTickHandler {
     @Suppress("unused")
     fun onWorldTick(event: TickEvent.WorldTickEvent) {
         if (event.world.dimension.isSurfaceWorld) {
-            if (!CoronavirusAPI.isCoronavirusEpidemicNow()) {
-                withChance(
-                    CoronavirusAPI.getCoronavirusParameters(
-                        event.world.difficulty.id
-                    ).epidemicChanceParam
-                ) {
-                    duration = rndLongDecrementOrIncrement(
-                        epidemicDurationTicks, epidemicDurationTicksModifier
-                    )
-                    CoronavirusAPI.getCoronavirus().epidemic = true
-                    CoronavirusAPI.getCoronavirus().epidemics++
-                    event.world.players.forEach {
-                        playSound(it, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+            if (!CoronavirusAPI.isCoronavirusFinalized()) {
+                if (!CoronavirusAPI.isCoronavirusEpidemicNow()) {
+                    withChance(
+                        CoronavirusAPI.getCoronavirusParameters(
+                            event.world.difficulty.id
+                        ).epidemicChanceParam
+                    ) {
+                        duration = rndLongDecrementOrIncrement(
+                            epidemicDurationTicks, epidemicDurationTicksModifier
+                        )
+                        CoronavirusAPI.getCoronavirus().epidemic = true
+                        CoronavirusAPI.getCoronavirus().epidemics++
+                        event.world.players.forEach {
+                            playSound(it, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+                        }
+                        event.world.players.forEach {
+                            it.attackEntityFrom(DamageSource.MAGIC, 2.0f)
+                        }
+                        event.world.server?.playerList?.sendMessage(epidemicStartMessage)
                     }
-                    event.world.players.forEach {
-                        it.attackEntityFrom(DamageSource.MAGIC, 2.0f)
+                } else {
+                    CoronavirusAPI.getCoronavirus().lastEpidemicTime += 1
+                    if (CoronavirusAPI.getCoronavirusLastEpidemicTime() >= duration) {
+                        CoronavirusAPI.getCoronavirus().epidemic = false
+                        CoronavirusAPI.getCoronavirus().lastEpidemicTime = 0
+                        event.world.server?.playerList?.sendMessage(epidemicStopMessage)
                     }
-                    event.world.server?.playerList?.sendMessage(epidemicStartMessage)
-                }
-            } else {
-                CoronavirusAPI.getCoronavirus().lastEpidemicTime += 1
-                if (CoronavirusAPI.getCoronavirusLastEpidemicTime() >= duration) {
-                    CoronavirusAPI.getCoronavirus().epidemic = false
-                    CoronavirusAPI.getCoronavirus().lastEpidemicTime = 0
-                    CoronavirusAPI.getCoronavirus().epidemics++
-                    event.world.server?.playerList?.sendMessage(epidemicStopMessage)
                 }
             }
 
