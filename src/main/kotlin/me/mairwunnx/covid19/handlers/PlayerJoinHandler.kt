@@ -1,4 +1,4 @@
-package me.mairwunnx.covid19
+package me.mairwunnx.covid19.handlers
 
 import me.mairwunnx.covid19.api.CoronavirusAPI
 import me.mairwunnx.covid19.api.isEvenNumber

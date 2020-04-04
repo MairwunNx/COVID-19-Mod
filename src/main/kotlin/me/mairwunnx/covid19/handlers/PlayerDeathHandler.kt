@@ -1,4 +1,4 @@
-package me.mairwunnx.covid19
+package me.mairwunnx.covid19.handlers
 
 import me.mairwunnx.covid19.api.CoronavirusAPI
 import net.minecraft.entity.player.ServerPlayerEntity
@@ -24,7 +24,11 @@ object PlayerDeathHandler {
                 CoronavirusAPI.getPlayer(player.name.string)?.isDead = true
                 server.playerList.bannedPlayers.addEntry(
                     ProfileBanEntry(
-                        player.gameProfile, null, "Coronavirus Patrol", null, reasonMessage
+                        player.gameProfile,
+                        null,
+                        "Coronavirus Patrol",
+                        null,
+                        reasonMessage
                     )
                 )
                 player.connection.disconnect(diedMessage)
