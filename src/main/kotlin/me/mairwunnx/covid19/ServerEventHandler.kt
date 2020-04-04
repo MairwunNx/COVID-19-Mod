@@ -3,6 +3,7 @@ package me.mairwunnx.covid19
 import me.mairwunnx.covid19.api.purgeVirusStateMap
 import me.mairwunnx.covid19.api.store.CoronavirusStore
 import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent
@@ -13,6 +14,11 @@ import java.io.File
 object ServerEventHandler {
     @SubscribeEvent
     fun onServerStarting(event: FMLServerStartingEvent) = initializeCoronavirusStore(event)
+
+    @SubscribeEvent
+    fun onServerSaving(
+        @Suppress("UNUSED_PARAMETER") event: WorldEvent.Save
+    ) = CoronavirusStore.save()
 
     @SubscribeEvent
     fun onServerShuttingDown(

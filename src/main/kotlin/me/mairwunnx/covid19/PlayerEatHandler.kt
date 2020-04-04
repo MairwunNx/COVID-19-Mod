@@ -4,6 +4,7 @@ import me.mairwunnx.covid19.api.*
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.item.Items
 import net.minecraft.potion.Potions
+import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
@@ -43,6 +44,7 @@ object PlayerEatHandler {
                 CoronavirusAPI.infectPlayerInitially(
                     player.name.string, CoronavirusInfectInitiator.Eat
                 )
+                player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
             }
         }
     }

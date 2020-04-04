@@ -7,6 +7,7 @@ import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.fml.DistExecutor
+import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.abs
 
@@ -113,7 +114,7 @@ fun playSound(
     }
 }
 
-private val virusStateHashMap: HashMap<String, MutableSet<Double>> = hashMapOf()
+private val virusStateHashMap: HashMap<String, MutableList<Double>> = hashMapOf()
 
 /**
  * It calls in server shutting down event.
@@ -126,6 +127,7 @@ fun purgeVirusStateMap() = virusStateHashMap.clear()
  * Updates virus state for specified player.
  * @param name target player name.
  */
+@Synchronized
 fun updatePlayerVirusState(name: String) {
     if (virusStateHashMap[name] != null) {
         virusStateHashMap[name]?.add(CoronavirusAPI.getInfectPercent(name))
@@ -136,13 +138,14 @@ fun updatePlayerVirusState(name: String) {
             )
         }
     } else {
-        virusStateHashMap[name] = hashSetOf()
+        virusStateHashMap[name] = mutableListOf()
     }
 
-    val equalsDelta = 0.0001
+    val equalsDelta = 0.000001
     val values = virusStateHashMap[name]!!
 
     if (values.count() >= 3) {
+        LogManager.getLogger().info(values)
         CoronavirusAPI.getPlayer(name)?.infectStatus = when {
             abs(values.last() - values.elementAt(values.size - 2)) < equalsDelta -> CoronavirusInfectStatus.Suspended
             values.last() > values.elementAt(values.size - 2) -> CoronavirusInfectStatus.Actively

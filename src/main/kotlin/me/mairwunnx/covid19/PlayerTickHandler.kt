@@ -1,9 +1,8 @@
 package me.mairwunnx.covid19
 
-import me.mairwunnx.covid19.api.CoronavirusAPI
-import me.mairwunnx.covid19.api.CoronavirusInfectStatus
-import me.mairwunnx.covid19.api.updatePlayerVirusState
-import me.mairwunnx.covid19.api.withChance
+import me.mairwunnx.covid19.api.*
+import net.minecraft.util.SoundCategory
+import net.minecraft.util.SoundEvents
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
@@ -20,18 +19,23 @@ object PlayerTickHandler {
         )
 
         // todo: create minimal time cooldown for chance checking. (e.g 1 - 2min) and decrement time by difficulty.
-        withChance(params.playerVirusEffectChanceParam) {
-            CoronavirusAPI.getCoronavirusEffectByPercent(
-                CoronavirusAPI.getInfectPercent(name)
-            ).apply(event.player)
+        if (CoronavirusAPI.getInfectPercent(name) > 1) {
+            withChance(params.playerVirusEffectChanceParam) {
+                CoronavirusAPI.getCoronavirusEffectByPercent(
+                    CoronavirusAPI.getInfectPercent(name)
+                ).apply(event.player)
+                playSound(event.player, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+            }
         }
 
-        updatePlayerVirusState(event.player.name.string)
-        if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Recession) {
-            CoronavirusAPI.disinfectPlayer(name, params.genericDisinfectDosePerTickParam)
-        }
-        if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Actively) {
-            CoronavirusAPI.infectPlayer(name, params.genericInfectDosePerTickParam)
+        if (CoronavirusAPI.getMetaIsInitiallyInfected(name)) {
+            updatePlayerVirusState(event.player.name.string)
+            if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Recession) {
+                CoronavirusAPI.disinfectPlayer(name, params.genericDisinfectDosePerTickParam)
+            }
+            if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Actively) {
+                CoronavirusAPI.infectPlayer(name, params.genericInfectDosePerTickParam)
+            }
         }
     }
 }

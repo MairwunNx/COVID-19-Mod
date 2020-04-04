@@ -7,7 +7,7 @@ import net.minecraft.potion.Effects
 
 object CoronavirusEffect1 : ICoronavirusEffect {
     const val nauseaDurationTicks = 80
-    const val slownessDurationTicks = 20
+    const val slownessDurationTicks = 40
 
     override val effects: ArrayList<EffectInstance> = arrayListOf(
         EffectInstance(Effects.NAUSEA, nauseaDurationTicks, 1),

@@ -1,0 +1,6 @@
+todo: add checking on virus finalized.
+todo: add ability to finalize virus.
+todo: add advancements for players.
+todo: reward for finalizing virus.
+todo: add reward for self healign. (base on infect maximum value for calculating reward).
+todo: add small chance to virus reborn after finalizing by eating not cooked eat.
