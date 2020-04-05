@@ -26,6 +26,7 @@ object ServerEventHandler {
     ) {
         CoronavirusStore.save()
         purgeVirusStateMap()
+        ItemDropHandler.purgeConditionsItemMaps()
     }
 
     private fun initializeCoronavirusStore(event: FMLServerStartingEvent) {

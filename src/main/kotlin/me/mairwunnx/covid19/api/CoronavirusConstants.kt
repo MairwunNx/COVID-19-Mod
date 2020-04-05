@@ -73,3 +73,6 @@ const val playerMinimalMaxValueToImmunity = 23.69 // =)
 
 const val coronavirusRebornChance = 0.001
 const val coronavirusRebornChanceModifier = 2.33
+
+const val coronavirusFinalizedExperience = 30
+const val coronavirusFinalizedExperienceModifier = 1.36
