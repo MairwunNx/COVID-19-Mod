@@ -77,7 +77,7 @@ fun playSound(
     player: PlayerEntity,
     soundEvent: SoundEvent,
     soundCategory: SoundCategory,
-    volume: Float = 0.8f,
+    volume: Float = 1.0f,
     // It need for not calling `Minecraft#world`
     // before world loading.
     ignoreWorld: Boolean = false

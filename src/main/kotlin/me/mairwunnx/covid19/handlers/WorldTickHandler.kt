@@ -1,26 +1,13 @@
 package me.mairwunnx.covid19.handlers
 
+import me.mairwunnx.covid19.*
 import me.mairwunnx.covid19.api.*
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
-import net.minecraft.util.SoundEvents
-import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
 object WorldTickHandler {
-    private val epidemicStartMessage = TranslationTextComponent(
-        "covid19.epidemic.start_notification"
-    )
-    private val epidemicStopMessage = TranslationTextComponent(
-        "covid19.epidemic.stop_notification"
-    )
-    private val playerAttacked = TranslationTextComponent(
-        "covid19.infect.damage_notify"
-    )
-    private val playerLivedTakeAChance = TranslationTextComponent(
-        "covid19.infect.take_a_chance"
-    )
     private val covidDamageSource = DamageSource(
         "covid19"
     ).setDamageBypassesArmor().setDamageAllowedInCreativeMode()
@@ -43,7 +30,7 @@ object WorldTickHandler {
                         CoronavirusAPI.getCoronavirus().epidemic = true
                         CoronavirusAPI.getCoronavirus().epidemics++
                         event.world.players.forEach {
-                            playSound(it, SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.AMBIENT)
+                            playSound(it, epidemicStartSound, SoundCategory.AMBIENT)
                         }
                         event.world.players.forEach {
                             it.attackEntityFrom(DamageSource.MAGIC, 2.0f)
@@ -56,6 +43,9 @@ object WorldTickHandler {
                         CoronavirusAPI.getCoronavirus().epidemic = false
                         CoronavirusAPI.getCoronavirus().lastEpidemicTime = 0
                         event.world.server?.playerList?.sendMessage(epidemicStopMessage)
+                        event.world.players.forEach {
+                            playSound(it, epidemicStopSound, SoundCategory.AMBIENT)
+                        }
                     }
                 }
             }
@@ -86,11 +76,11 @@ object WorldTickHandler {
                     CoronavirusAPI.setInfectPercent(name, infectPercent)
                     CoronavirusAPI.refreshPlayerKillingTick(name)
                     updatePlayerVirusState(it.name.string)
-                    it.sendMessage(playerLivedTakeAChance)
+                    it.sendMessage(playerLivedTakeAChanceMessage)
+                    playSound(it, killingLivedSound, SoundCategory.AMBIENT)
                 } else {
                     it.attackEntityFrom(covidDamageSource, playerDyingDamagePerSecond)
                     CoronavirusAPI.addPlayerKillingTick(name)
-                    it.sendMessage(playerAttacked)
                 }
             }
         }

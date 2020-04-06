@@ -18,7 +18,7 @@ object CoronavirusStore {
             isLenient = false,
             serializeSpecialFloatingPointValues = false,
             allowStructuredMapKeys = true,
-            prettyPrint = true,
+            prettyPrint = true, // todo: before release change this value to false.
             unquotedPrint = false,
             useArrayPolymorphism = false
         )

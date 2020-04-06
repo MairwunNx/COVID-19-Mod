@@ -4,12 +4,12 @@ import me.mairwunnx.covid19.api.CoronavirusAPI
 import me.mairwunnx.covid19.api.coronavirusFinalizedExperience
 import me.mairwunnx.covid19.api.coronavirusFinalizedExperienceModifier
 import me.mairwunnx.covid19.api.playSound
+import me.mairwunnx.covid19.virusSuspendedSound
 import net.minecraft.entity.effect.LightningBoltEntity
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.Item
 import net.minecraft.item.Items
 import net.minecraft.util.SoundCategory
-import net.minecraft.util.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.server.ServerWorld
@@ -90,7 +90,7 @@ object ItemDropHandler {
                         event.player.world.players.forEach {
                             playSound(
                                 player = it,
-                                soundEvent = SoundEvents.ENTITY_ENDER_DRAGON_DEATH,
+                                soundEvent = virusSuspendedSound,
                                 soundCategory = SoundCategory.AMBIENT
                             )
                         }

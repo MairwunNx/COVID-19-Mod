@@ -65,7 +65,7 @@ const val epidemicInfectedMobSpawnChanceModifier = 1.75
 const val epidemicDurationTicks = 3600L
 const val epidemicDurationTicksModifier = 800L
 
-const val playerVirusEffectChance = 0.0000465
+const val playerVirusEffectChance = 0.0000565
 const val playerVirusEffectChanceModifier = 1.5
 
 const val playerDyingDamagePerSecond = 0.35f // todo: increment by difficulty.

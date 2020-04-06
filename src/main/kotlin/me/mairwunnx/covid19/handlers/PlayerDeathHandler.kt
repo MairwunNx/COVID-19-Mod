@@ -1,18 +1,14 @@
 package me.mairwunnx.covid19.handlers
 
 import me.mairwunnx.covid19.api.CoronavirusAPI
+import me.mairwunnx.covid19.banReasonMessage
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.server.management.ProfileBanEntry
-import net.minecraft.util.text.TranslationTextComponent
+import net.minecraft.util.text.TextComponentUtils
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
 object PlayerDeathHandler {
-    private var reasonMessage = TranslationTextComponent(
-        "covid.ban.reason"
-    ).unformattedComponentText
-    val diedMessage = TranslationTextComponent("covid.player.died")
-
     @SubscribeEvent
     @Suppress("unused")
     fun onPlayerDeath(event: LivingDeathEvent) {
@@ -28,10 +24,10 @@ object PlayerDeathHandler {
                         null,
                         "Coronavirus Patrol",
                         null,
-                        reasonMessage
+                        banReasonMessage
                     )
                 )
-                player.connection.disconnect(diedMessage)
+                player.connection.disconnect(TextComponentUtils.toTextComponent { banReasonMessage })
             }
         }
     }

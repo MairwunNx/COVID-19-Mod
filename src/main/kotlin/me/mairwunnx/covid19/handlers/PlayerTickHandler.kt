@@ -1,11 +1,12 @@
 package me.mairwunnx.covid19.handlers
 
+import me.mairwunnx.covid19.*
 import me.mairwunnx.covid19.api.*
+import me.mairwunnx.covid19.api.CoronavirusAPI.lessOrEquals
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
 import net.minecraft.util.SoundCategory
-import net.minecraft.util.SoundEvents
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import kotlin.math.roundToInt
@@ -30,8 +31,8 @@ object PlayerTickHandler {
                 CoronavirusAPI.getCoronavirusEffectByPercent(
                     CoronavirusAPI.getInfectPercent(name)
                 ).apply(event.player)
-                event.player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
-                playSound(event.player, SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.AMBIENT)
+                event.player.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond * 1.8f)
+                playSound(event.player, infectEffectSound, SoundCategory.AMBIENT)
             }
         }
 
@@ -47,25 +48,27 @@ object PlayerTickHandler {
 
         if (CoronavirusAPI.isDisinfectedRewarded(name)) {
             CoronavirusAPI.getPlayerMeta(name)?.disinfectedReward = false
-            event.player.addPotionEffect(
-                EffectInstance(Effects.LUCK, 12000, 2)
-            )
+            event.player.addPotionEffect(EffectInstance(Effects.LUCK, 12000, 2))
             val difficulty = event.player.world.difficulty.id
             if (difficulty >= 2) {
-                event.player.addPotionEffect(
-                    EffectInstance(Effects.SATURATION, 6000, 2)
-                )
+                event.player.addPotionEffect(EffectInstance(Effects.SATURATION, 6000, 2))
             }
             if (difficulty == 3) {
-                event.player.addPotionEffect(
-                    EffectInstance(Effects.STRENGTH, 6000, 2)
-                )
+                event.player.addPotionEffect(EffectInstance(Effects.STRENGTH, 6000, 2))
             }
-            playSound(event.player, SoundEvents.ITEM_TOTEM_USE, SoundCategory.AMBIENT)
-            playSound(event.player, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT)
+            playSound(event.player, healedSound1, SoundCategory.AMBIENT)
+            playSound(event.player, healedSound2, SoundCategory.AMBIENT)
+            event.player.sendMessage(disinfectedMessage)
             event.player.addExperienceLevel(
                 (CoronavirusAPI.getInfectMaxPercent(name) * playerDisinfectedExperienceRewardModifier).roundToInt()
             )
+        } else {
+            if (CoronavirusAPI.getMetaIsInitiallyInfected(name)) {
+                if (CoronavirusAPI.getInfectPercent(name) lessOrEquals 0.0) {
+                    playSound(event.player, healedSound2, SoundCategory.AMBIENT)
+                    event.player.sendMessage(disinfectedButSimpleMessage)
+                }
+            }
         }
     }
 }

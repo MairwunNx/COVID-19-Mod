@@ -4,6 +4,7 @@ import me.mairwunnx.covid19.api.CoronavirusAPI
 import me.mairwunnx.covid19.api.expandAxisAlignedBB
 import me.mairwunnx.covid19.api.playerDyingDamagePerSecond
 import me.mairwunnx.covid19.api.withChance
+import me.mairwunnx.covid19.infectedMessage
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.DamageSource
 import net.minecraftforge.event.entity.living.LivingEvent
@@ -43,7 +44,11 @@ object EntityMoveHandler {
                                     it.name.string,
                                     CoronavirusAPI.processInfectInitiator(event.entityLiving)
                                 )
-                                it.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
+                                it.attackEntityFrom(
+                                    DamageSource.MAGIC,
+                                    playerDyingDamagePerSecond * 2.2f
+                                )
+                                it.sendMessage(infectedMessage)
                             }
                         }
                     }

@@ -32,11 +32,7 @@ object ServerEventHandler {
     private fun initializeCoronavirusStore(event: FMLServerStartingEvent) {
         DistExecutor.runWhenOn(Dist.CLIENT) {
             Runnable {
-                // todo: bug: world names with same names
-                //  (e.g: `survival`, but have duplicates in file system and placed in folder
-                //  with suffix `(1)` incorrectly worked. Because we get world name, not world
-                //  folder path).
-                CoronavirusStore.init("saves${File.separator}${event.server.worldName}")
+                CoronavirusStore.init("saves${File.separator}${event.server.folderName}")
             }
         }
         DistExecutor.runWhenOn(Dist.DEDICATED_SERVER) {

@@ -5,17 +5,17 @@ import me.mairwunnx.covid19.api.isEvenNumber
 import me.mairwunnx.covid19.api.playSound
 import me.mairwunnx.covid19.api.playerJoinLightningRowDistance
 import me.mairwunnx.covid19.api.store.CoronavirusModel
+import me.mairwunnx.covid19.welcomeMessage
+import me.mairwunnx.covid19.welcomeSound
 import net.minecraft.entity.effect.LightningBoltEntity
 import net.minecraft.util.SoundCategory
-import net.minecraft.util.SoundEvents
-import net.minecraft.util.text.TranslationTextComponent
 import net.minecraft.world.server.ServerWorld
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.DistExecutor
 
 object PlayerJoinHandler {
-    private val welcomeMessage = TranslationTextComponent("covid19.welcome")
-
     @SubscribeEvent
     @Suppress("unused")
     fun onFirstPlayerJoin(event: PlayerEvent.PlayerLoggedInEvent) {
@@ -23,9 +23,13 @@ object PlayerJoinHandler {
         val name = player.name.string
 
         if (CoronavirusAPI.isPlayerDead(name)) {
-            event.player.server?.playerList?.players?.find {
-                it.name.string == name
-            }?.connection?.disconnect(PlayerDeathHandler.diedMessage)
+            DistExecutor.runWhenOn(Dist.CLIENT) {
+                throw IllegalStateException(
+                    "\n\n       Your world no longer available! LOSER! You was killed by Coronavirus!".plus(
+                        "\n\n           Hmm, description, well. You died of a virus; mom and dad will not give you a second life.\n\n   If you really want to continue playing in this world, then look at the `saves/<you world here>` folder, explore.\n   If something goes wrong, write to Mr. @MairwunNx.\n\n      - Also read this https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic\n      - And this: STAY HOME.SAVE LIVES. https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public\n\n      - Берегите себя и своих близких.\n"
+                    )
+                )
+            }
         }
 
         if (!CoronavirusAPI.getMetaIsLoggedIn(name)) {
@@ -59,7 +63,7 @@ object PlayerJoinHandler {
                 player.sendMessage(welcomeMessage)
                 playSound(
                     player = player,
-                    soundEvent = SoundEvents.ENTITY_WITHER_SPAWN,
+                    soundEvent = welcomeSound,
                     soundCategory = SoundCategory.AMBIENT,
                     ignoreWorld = true
                 )

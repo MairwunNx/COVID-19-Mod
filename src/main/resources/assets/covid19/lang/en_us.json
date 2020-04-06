@@ -1,3 +1,12 @@
 {
-    "covid19.welcomeMessage": ""
+    "covid19.welcome": "§cYour Minecraft world was infected by COVID-19 coronavirus. Beware of infected mobs and do not eat raw food. Be careful!",
+    "covid19.epidemic.start": "§cThe coronavirus epidemic has begun! Be careful, the chance of infection increases. Stay at home and do not contact infected mobs.",
+    "covid19.epidemic.stop": "§cCoronavirus epidemics subside, the percentage of infected mobs subsided, but be very careful, there is still infection.",
+    "covid19.infect.take_a_chance": "§6WTF LOL! Congratulations. You managed to survive during the deadly effect of the virus! I give you a chance to heal normally.",
+    "covid19.reborn": "§cThe virus has been reborn again! Animals will be re-infected, and players without immunity can have problems! Be careful!",
+    "covid19.ban.reason": "§cYou won't come here anymore. LOSER! You was killed by Coronavirus!",
+    "covid19.infected": "§cYou are infected with coronavirus. Stay at home and be treated with §6golden eat§c, do not contact with mobs. Be careful!",
+    "covid19.suspended_by": "§6The virus was destroyed by the player §d%s§6. Newborn mobs will no longer be infected, epidemics are stopped. If you have not recovered yet - start to be treated.",
+    "covid19.disinfected": "§6You have fully recovered and are now immune to the virus. Well. Have a good game. Your reward, sir.",
+    "covid19.disinfected_but_simple": "§6You have reduced your infection level to 0%, but due to insufficient progression of the virus in your body, you have not developed immunity to it, be careful."
 }
