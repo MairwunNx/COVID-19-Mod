@@ -7,7 +7,6 @@ import net.minecraft.util.SoundEvent
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.fml.DistExecutor
-import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.abs
 
@@ -143,7 +142,6 @@ fun updatePlayerVirusState(name: String) {
     val values = virusStateHashMap[name]!!
 
     if (values.count() >= 3) {
-        LogManager.getLogger().info(values)
         CoronavirusAPI.getPlayer(name)?.infectStatus = when {
             abs(values.last() - values.elementAt(values.size - 2)) < equalsDelta -> CoronavirusInfectStatus.Suspended
             values.last() > values.elementAt(values.size - 2) -> CoronavirusInfectStatus.Actively
