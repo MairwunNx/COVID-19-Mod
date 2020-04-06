@@ -61,6 +61,8 @@ object PlayerTickHandler {
                     EffectInstance(Effects.STRENGTH, 6000, 2)
                 )
             }
+            playSound(event.player, SoundEvents.ITEM_TOTEM_USE, SoundCategory.AMBIENT)
+            playSound(event.player, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT)
             event.player.addExperienceLevel(
                 (CoronavirusAPI.getInfectMaxPercent(name) * playerDisinfectedExperienceRewardModifier).roundToInt()
             )
