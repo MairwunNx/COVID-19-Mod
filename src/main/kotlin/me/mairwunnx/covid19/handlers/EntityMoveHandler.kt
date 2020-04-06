@@ -29,20 +29,22 @@ object EntityMoveHandler {
                 )
 
                 players.forEach {
-                    if (CoronavirusAPI.getMetaIsInitiallyInfected(it.name.string)) {
-                        withChance(params.infectedMobInfectEntityChanceParam) {
-                            CoronavirusAPI.infectPlayer(
-                                it.name.string, params.infectedMobInfectDosePerTickParam
-                            )
-                        }
-                    } else {
-                        withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
-                            CoronavirusAPI.getCoronavirus().infected++
-                            CoronavirusAPI.infectPlayerInitially(
-                                it.name.string,
-                                CoronavirusAPI.processInfectInitiator(event.entityLiving)
-                            )
-                            it.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
+                    if (!CoronavirusAPI.isPlayerHasImmunity(it.name.string)) {
+                        if (CoronavirusAPI.getMetaIsInitiallyInfected(it.name.string)) {
+                            withChance(params.infectedMobInfectEntityChanceParam) {
+                                CoronavirusAPI.infectPlayer(
+                                    it.name.string, params.infectedMobInfectDosePerTickParam
+                                )
+                            }
+                        } else {
+                            withChance(params.infectedMobInitiallyInfectEntityChanceParam) {
+                                CoronavirusAPI.getCoronavirus().infected++
+                                CoronavirusAPI.infectPlayerInitially(
+                                    it.name.string,
+                                    CoronavirusAPI.processInfectInitiator(event.entityLiving)
+                                )
+                                it.attackEntityFrom(DamageSource.MAGIC, playerDyingDamagePerSecond)
+                            }
                         }
                     }
                 }

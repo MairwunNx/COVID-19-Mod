@@ -244,6 +244,12 @@ object CoronavirusAPI {
     fun getInfectMaxPercent(name: String) = getPlayer(name)?.meta?.infectMaxPercent ?: 0.0
 
     /**
+     * @param name player nickname.
+     * @return return true if player able to reward by disinfect.
+     */
+    fun isDisinfectedRewarded(name: String) = getPlayer(name)?.meta?.disinfectedReward ?: false
+
+    /**
      * @param entity target entity to check.
      * @param isEpidemic is epidemic entity?
      * @return true if entity infected or epidemic
@@ -292,8 +298,15 @@ object CoronavirusAPI {
                     it.infectStatus = CoronavirusInfectStatus.None
                     it.infectPercent = disinfectedInfectPercent
                     it.infectStage = disinfectedInfectStage
-                    it.hasImmunity =
-                        getInfectMaxPercent(name) greatOrEquals playerMinimalMaxValueToImmunity
+                    it.hasImmunity = getInfectMaxPercent(
+                        name
+                    ) greatOrEquals playerMinimalMaxValueToImmunity
+
+                    if (!isDisinfectedRewarded(name)) {
+                        if (getInfectMaxPercent(name) greatOrEquals playerMinimalMaxValueToReward) {
+                            getPlayerMeta(name)?.disinfectedReward = true
+                        }
+                    }
                 }
             }
         }

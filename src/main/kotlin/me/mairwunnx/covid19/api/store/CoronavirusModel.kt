@@ -38,7 +38,8 @@ data class CoronavirusModel(
             var initiallyDisinfected: Boolean = false,
             var killing: Boolean = false,
             var killingTicks: Int = 0,
-            var infectMaxPercent: Double = 0.0
+            var infectMaxPercent: Double = 0.0,
+            var disinfectedReward: Boolean = false
         )
     }
 }

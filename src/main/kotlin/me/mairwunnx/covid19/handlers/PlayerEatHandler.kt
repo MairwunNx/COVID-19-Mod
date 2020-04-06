@@ -32,6 +32,8 @@ object PlayerEatHandler {
         )
         val player = event.entityLiving as ServerPlayerEntity
 
+        if (CoronavirusAPI.isPlayerHasImmunity(player.name.string)) return
+
         if (CoronavirusAPI.getMetaIsInitiallyInfected(player.name.string)) {
             if (!CoronavirusAPI.isCoronavirusFinalized()) {
                 withChance(params.infectedEatChanceParam) {

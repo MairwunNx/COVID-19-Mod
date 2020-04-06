@@ -133,9 +133,7 @@ fun updatePlayerVirusState(name: String) {
         virusStateHashMap[name]?.add(CoronavirusAPI.getInfectPercent(name))
 
         if (virusStateHashMap[name]?.count()!! > 4) {
-            virusStateHashMap[name]?.remove(
-                virusStateHashMap[name]?.first()
-            )
+            virusStateHashMap[name]?.remove(virusStateHashMap[name]?.first())
         }
     } else {
         virusStateHashMap[name] = mutableListOf()

@@ -59,7 +59,7 @@ const val infectedEatChanceModifier = 1.75
 const val infectedEatInfectDose = 0.8
 const val infectedEatInfectDoseModifier = 1.6
 
-const val epidemicChance = 0.000062
+const val epidemicChance = 0.000062 // todo: decrement \ increment by difficulty.
 const val epidemicInfectedMobSpawnChance = 0.0002
 const val epidemicInfectedMobSpawnChanceModifier = 1.75
 const val epidemicDurationTicks = 3600L
@@ -68,8 +68,11 @@ const val epidemicDurationTicksModifier = 800L
 const val playerVirusEffectChance = 0.0000465
 const val playerVirusEffectChanceModifier = 1.5
 
-const val playerDyingDamagePerSecond = 0.35f
-const val playerMinimalMaxValueToImmunity = 23.69 // =)
+const val playerDyingDamagePerSecond = 0.35f // todo: increment by difficulty.
+const val playerMinimalMaxValueToImmunity = 23.69 // todo: increment by difficulty.
+
+const val playerMinimalMaxValueToReward = 10.0 // todo: increment by difficulty.
+const val playerDisinfectedExperienceRewardModifier = 1.23 // todo: increment by difficulty.
 
 const val coronavirusRebornChance = 0.001
 const val coronavirusRebornChanceModifier = 2.33

@@ -1,3 +1,1 @@
 todo: add advancements for players.
-todo: reward for finalizing virus.
-todo: add reward for self healign. (base on infect maximum value for calculating reward).
