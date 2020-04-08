@@ -29,7 +29,7 @@ object CoronavirusStore {
         load()
     }
 
-    fun load() {
+    private fun load() {
         try {
             val json = File(path).readText()
             data = jsonInstance.parse(CoronavirusModel.serializer(), json)

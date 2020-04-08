@@ -2,7 +2,6 @@ package me.mairwunnx.covid19.handlers
 
 import me.mairwunnx.covid19.*
 import me.mairwunnx.covid19.api.*
-import me.mairwunnx.covid19.api.CoronavirusAPI.lessOrEquals
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
 import net.minecraft.util.DamageSource
@@ -36,17 +35,19 @@ object PlayerTickHandler {
             }
         }
 
-        if (CoronavirusAPI.getMetaIsInitiallyInfected(name)) {
-            updatePlayerVirusState(event.player.name.string)
-            if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Recession) {
-                CoronavirusAPI.disinfectPlayer(name, params.genericDisinfectDosePerTickParam)
-            }
-            if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Actively) {
-                CoronavirusAPI.infectPlayer(name, params.genericInfectDosePerTickParam)
+        if (!CoronavirusAPI.isPlayerHasImmunity(name)) {
+            if (CoronavirusAPI.getMetaIsInitiallyInfected(name)) {
+                updatePlayerVirusState(event.player.name.string)
+                if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Recession) {
+                    CoronavirusAPI.disinfectPlayer(name, params.genericDisinfectDosePerTickParam)
+                }
+                if (CoronavirusAPI.getInfectStatus(name) == CoronavirusInfectStatus.Actively) {
+                    CoronavirusAPI.infectPlayer(name, params.genericInfectDosePerTickParam)
+                }
             }
         }
 
-        if (CoronavirusAPI.isDisinfectedRewarded(name)) {
+        if (CoronavirusAPI.isDisinfectedRewarded(name) && CoronavirusAPI.isPlayerHasImmunity(name)) {
             CoronavirusAPI.getPlayerMeta(name)?.disinfectedReward = false
             event.player.addPotionEffect(EffectInstance(Effects.LUCK, 12000, 2))
             val difficulty = event.player.world.difficulty.id
@@ -62,13 +63,10 @@ object PlayerTickHandler {
             event.player.addExperienceLevel(
                 (CoronavirusAPI.getInfectMaxPercent(name) * playerDisinfectedExperienceRewardModifier).roundToInt()
             )
-        } else {
-            if (CoronavirusAPI.getMetaIsInitiallyInfected(name)) {
-                if (CoronavirusAPI.getInfectPercent(name) lessOrEquals 0.0) {
-                    playSound(event.player, healedSound2, SoundCategory.AMBIENT)
-                    event.player.sendMessage(disinfectedButSimpleMessage)
-                }
-            }
+        } else if (CoronavirusAPI.isDisinfectedRewarded(name)) {
+            CoronavirusAPI.getPlayerMeta(name)?.disinfectedReward = false
+            playSound(event.player, healedSound2, SoundCategory.AMBIENT)
+            event.player.sendMessage(disinfectedButSimpleMessage)
         }
     }
 }

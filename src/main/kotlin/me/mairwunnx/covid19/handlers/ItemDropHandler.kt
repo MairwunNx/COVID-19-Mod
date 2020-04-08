@@ -9,6 +9,8 @@ import net.minecraft.entity.effect.LightningBoltEntity
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.Item
 import net.minecraft.item.Items
+import net.minecraft.potion.EffectInstance
+import net.minecraft.potion.Effects
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.TranslationTextComponent
@@ -94,6 +96,7 @@ object ItemDropHandler {
                                 soundCategory = SoundCategory.AMBIENT
                             )
                         }
+                        getRewardEffects(cachedDifficulty).forEach { event.player.addPotionEffect(it) }
                         conditionsItemsHashMap[event.entityItem.position]?.forEach { it.remove() }
                         conditionsHashMap.clear()
                         conditionsItemsHashMap.clear()
@@ -136,6 +139,15 @@ object ItemDropHandler {
             }
         }
         return items
+    }
+
+    private fun getRewardEffects(difficulty: Int): List<EffectInstance> {
+        val effects = mutableListOf<EffectInstance>()
+        if (difficulty >= 0) effects.add(EffectInstance(Effects.SATURATION, 6000, 2))
+        if (difficulty >= 1) effects.add(EffectInstance(Effects.FIRE_RESISTANCE, 12000, 2))
+        if (difficulty >= 2) effects.add(EffectInstance(Effects.STRENGTH, 9000, 2))
+        if (difficulty >= 2) effects.add(EffectInstance(Effects.REGENERATION, 4500, 2))
+        return effects
     }
 
     private fun getRequiredResources(difficulty: Int): List<Item> {
