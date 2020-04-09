@@ -55,7 +55,7 @@ If you find a problem, be sure to create an [issue here](https://github.com/Mair
 #### [Forge 1.14.4 Branch](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.14.4) • [Forge 1.15.2 Branch](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.15.2)
 
 #### Download ☕
-#### [Forge 1.14.4 Latest](https://github.com/MairwunNx/COVID-19-Mod/releases/download/1.0.0%2BMC-1.14.4/COVID-19-1.0.0+MC-1.14.4.jar) • [Forge 1.15.2 Latest](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.15.2)
+#### [Forge 1.14.4 Latest](https://github.com/MairwunNx/COVID-19-Mod/releases/download/1.0.0%2BMC-1.14.4/COVID-19-1.0.0+MC-1.14.4.jar) • [Forge 1.15.2 Latest](https://github.com/MairwunNx/COVID-19-Mod/releases/download/1.0.0%2BMC-1.15.2/COVID-19-1.0.0+MC-1.15.2.jar)
 
 #### Look for us on [CurseForge]() mod page ✔
 
