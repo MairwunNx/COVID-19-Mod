@@ -39,7 +39,7 @@ The resources that need to be thrown into the hole to destroy the virus depend o
 
 ##### Good luck in the game! I hope this brings some interest to the game.
 
-*Oh, I want to say, by the way, I also wanted to add a subject of holy water to a game in which you can bathe and you will be treated in it, as if Putin **(Says Hi to the Party of crooks and thieves)** was swimming.*
+*Oh, I want to say, by the way, I also wanted to add a item of holy water to a game in which you can bathe and you will be treated in it; like Putin **(Says Hi to the Party of crooks and thieves)** swimming.*
 
 #### Know bugs 🐛
 
