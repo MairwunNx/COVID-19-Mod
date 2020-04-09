@@ -43,7 +43,7 @@ dependencies {
     minecraft("net.minecraftforge:forge:1.14.4-28.2.0")
 }
 
-configureMinecraft.mappings("snapshot", "20190719-1.14.3")
+configureMinecraft.mappings("stable", "58-1.14.4")
 
 tasks.withType<Jar> {
     archiveBaseName.set(project.name)
