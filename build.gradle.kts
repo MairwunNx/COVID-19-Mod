@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "me.mairwunnx.covid19"
-version = "1.0.0+MC-1.14.4"
+version = "1.0.0+MC-1.15.2"
 
 val Project.configureMinecraft
     get() = extensions.getByName<UserDevExtension>("minecraft")
@@ -40,7 +40,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
-    minecraft("net.minecraftforge:forge:1.14.4-28.2.0")
+    minecraft("net.minecraftforge:forge:1.15.2-31.1.0")
 }
 
 configureMinecraft.mappings("snapshot", "20190719-1.14.3")

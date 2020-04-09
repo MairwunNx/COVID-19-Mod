@@ -42,16 +42,16 @@ object PlayerJoinHandler {
                             player.world,
                             when {
                                 !isEvenNumber(lightning) -> getLightningPosByRow(
-                                    player.posX, row, lightning
+                                    player.positionVec.x, row, lightning
                                 )
-                                else -> player.posX
+                                else -> player.positionVec.x
                             },
-                            player.posY,
+                            player.positionVec.y,
                             when {
                                 isEvenNumber(lightning) -> getLightningPosByRow(
-                                    player.posZ, row, lightning
+                                    player.positionVec.z, row, lightning
                                 )
-                                else -> player.posZ
+                                else -> player.positionVec.z
                             },
                             true
                         )

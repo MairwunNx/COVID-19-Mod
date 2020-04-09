@@ -83,7 +83,7 @@ fun playSound(
 ) {
     DistExecutor.runWhenOn(Dist.CLIENT) {
         if (!ignoreWorld) {
-            Minecraft.getInstance().world.playSound(
+            Minecraft.getInstance().world?.playSound(
                 player.position.x.toDouble(),
                 player.position.y + player.eyeHeight.toDouble(),
                 player.position.z.toDouble(),
