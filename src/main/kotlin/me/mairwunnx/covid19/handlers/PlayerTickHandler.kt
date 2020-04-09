@@ -24,7 +24,7 @@ object PlayerTickHandler {
 
         // todo: create minimal time cooldown for chance checking.
         //  (e.g 1 - 2min) and decrement time by difficulty.
-        if (CoronavirusAPI.getInfectPercent(name) > 1) {
+        if (CoronavirusAPI.getInfectPercent(name) > 2.3) {
             withChance(params.playerVirusEffectChanceParam) {
                 event.player.clearActivePotions()
                 CoronavirusAPI.getCoronavirusEffectByPercent(

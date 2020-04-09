@@ -8,6 +8,7 @@ import me.mairwunnx.covid19.virusSuspendedSound
 import net.minecraft.entity.effect.LightningBoltEntity
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.potion.EffectInstance
 import net.minecraft.potion.Effects
@@ -86,7 +87,7 @@ object ItemDropHandler {
                             )
                         )
                         getRewardResources(cachedDifficulty).forEach {
-                            event.player.addItemStackToInventory(it.defaultInstance)
+                            event.player.addItemStackToInventory(ItemStack(it))
                         }
                         event.player.addExperienceLevel(getRewardExperience(cachedDifficulty))
                         event.player.world.players.forEach {

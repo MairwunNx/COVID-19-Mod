@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "me.mairwunnx.covid19"
-version = "1.0.0+MC-1.15.2"
+version = "1.0.1+MC-1.15.2"
 
 val Project.configureMinecraft
     get() = extensions.getByName<UserDevExtension>("minecraft")
