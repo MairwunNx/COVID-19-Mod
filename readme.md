@@ -18,6 +18,8 @@ Also, coronavirus epidemics will accompany you, it appears pseudo-randomly and l
 
 If you get coronavirus, you can be treated with **gold food**, **carrots**, **apples**. And the **healing potion** also helps. When you are treated, a sound will be played.
 
+And yet, the coronavirus has 2 states, `Actively` and `Recession`, the `Actively` state is given as soon as you become infected with the virus and are not treated, during this condition you will constantly become infected but not significantly *(the percentage of infection per tick depends on difficulty)*. The state of `Recession` is given as soon as you begin to be treated and do not become infected anywhere else. As long as you have a `Recession` disease, you will slowly recover *(the percentage of disinfection per tick depends on difficulty)*, even if you are not making any effort to do so.
+
 There are still rewards for treatment, if you are cured at an early stage, you simply will be sent a message with the sound that you have successfully cured, but you **will not have immunity**, because the virus **has not developed its anti-bodies** in your body.
 
 The reward **at 3 and large stages** of the virus will depend on the percentage of infection, as a reward you will be given **effects**, **immunity to infection**, and **something else**. =)
