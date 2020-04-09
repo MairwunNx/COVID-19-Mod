@@ -1,27 +1,64 @@
-<h4 align="center">🐛 Lightweight template repository for forge mod with using kotlin language and gradle build tools.</h4>
+<h3 align="center">🦠 Coronavirus in Minecraft now! 🦠 COVID-19 Minecraft mod 🦠</h4>
 
 <br/>
 
-#### Compatibility ✔
+#### WTF, Man? 🤨
 
-| Minecraft version | Forge version | Gradle version |
-|:--- |:--- |:--- |
-|1.14.4 (this branch) | `28.X.X` | `5.6.4` |
-|[1.15.2](https://github.com/MairwunNx/Minecraft-Forge-Kotlin-Mod-Template/tree/FORGE-1.15.2) | `31.X.X` | `5.6.4` |
+Yes, yes. Coronavirus in minecraft. This mod adds coronavirus to minecraft. It will not add any items \ blocks; it also does not require installation on the client. This mod should not be the meaning of your game, because it is like a small addition to the game in connection with the current situation in the world. Download and install this mod if you want to make survival a little more interesting. =)
 
-#### Contains 🧐
+#### Mechanics ⚙
 
-- Gradle **kotlin dsl** buildscript [build.gradle.kts](/build.gradle.kts).
-- Boilerplate code of **forge mdk**.
-- Included **kotlin runtime** (JDK 8) in build.
-- **Documentation** for build script.
-- Included some *hacks* for using **forge events** in kotlin classes. *(Not cool, but work)*.
+##### ⚠ Warning! 🚧 Bad English ⚠
 
-### Get started ☕
+At your first entry into the world, if the coronavirus is not finalized, you will be sent a message that there is a coronavirus in your world.
 
-1. Download sources \ clone repository or click on `Use this template` and clone.
-2. Open as project cloned repository on local disk. (In IDEA or Eclipse).
-3. IDEA automatically starts configuring build script. (Nothing need to do).
-4. After finishing all gradle tasks you can run `build` task and see library in path `./build/libs/xxx.jar`.
-5. Copy mod jar in minecraft mod directory and 🎉, mod loaded.
-6. If all steps finished without problems, put star on this repository =).
+You can play as usual, until the coronavirus exists you will be accompanied by infected mobs (with the effect of `unluck`) and if you get close enough to the infected mob to spread then you will become infected and you will be notified in chat.
+
+Also, coronavirus epidemics will accompany you, it appears pseudo-randomly and lasts about **2-3 real minutes**. During the epidemic, newborn mobs will die and will have a `wither` effect, they are more likely to become infected, so just sit at home during the epidemic.
+
+If you get coronavirus, you can be treated with **gold food**, **carrots**, **apples**. And the **healing potion** also helps. When you are treated, a sound will be played.
+
+There are still rewards for treatment, if you are cured at an early stage, you simply will be sent a message with the sound that you have successfully cured, but you **will not have immunity**, because the virus **has not developed its anti-bodies** in your body.
+
+The reward **at 3 and large stages** of the virus will depend on the percentage of infection, as a reward you will be given **effects**, **immunity to infection**, and **something else**. =)
+
+The virus has **only 10 stages** of evolution, when you go through all stages and the virtual percentage of infection becomes `100%`, you will die. **Slowly and painfully**. Damage will depend on the difficulty level at which you play. If you survive **within ~5 minutes** of the dying process, you will get a chance for treatment and your percentage of the disease will decrease to `80 - 70 - 90%`.
+
+Also during your illness you will be accompanied by **pseudo-random effects** that will intensify and become longer depending on the stage of the illness.
+
+Also, the virus can be finalized, dig a *hole* ~~(hole lol, sorry for my english)~~ and throw the necessary resources into it, a miracle will happen in the hole, it will strike lightning and clean dropped items in it and you will be rewarded *(Really good reward =), trust me dude)*. There will be no more virus, *but still there will be a small chance to revive it again if you eat raw food*.
+
+After finalizing the virus, do not forget to kill **all the remaining mobs** that are infected. ;)
+
+The resources that need to be thrown into the hole to destroy the virus depend on the difficulty level, try to throw the resources in the same position that the first resource was thrown into, if you violated the order of throwing resources, then try again in another hole.
+
+- Peaceful difficulty: `2 emeralds`
+- Easy difficulty: `2 emeralds, 3 diamonds`
+- Medium difficulty: `1 enchanted golden apple, 3 emeralds, 3 diamonds`
+- Hard difficulty: `2 enchanted golden apples, 3 emeralds, 6 diamonds`
+
+##### Good luck in the game! I hope this brings some interest to the game.
+
+*Oh, I want to say, by the way, I also wanted to add a subject of holy water to a game in which you can bathe and you will be treated in it, as if Putin **(Says Hi to the Party of crooks and thieves)** was swimming.*
+
+#### Know bugs 🐛
+
+- Effects can randomly apply incorrectly and i don't know why. Maybe minecraft bug. `¯\_(ツ)_/¯`
+- Re-login between different worlds in single player can cause incorrect mod working. Also don't know why. (If we re-login in the same world then work correctly).
+
+If you find a problem, be sure to create an [issue here](https://github.com/MairwunNx/COVID-19-Mod/issues/new). Do not write about bugs on CurseForge, it’s not convenient for me to look for them later.
+
+#### Compatibility 🧐
+
+#### [Forge 1.14.4 Branch](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.14.4) • [Forge 1.15.2 Branch](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.15.2)
+
+#### Download ☕
+#### [Forge 1.14.4 Latest](https://github.com/MairwunNx/COVID-19-Mod/releases/download/1.0.0-RC.3%2BMC-1.14.4/COVID-19-1.0.0-RC.3+MC-1.14.4.jar) • [Forge 1.15.2 Latest](https://github.com/MairwunNx/COVID-19-Mod/tree/FORGE-1.15.2)
+
+#### Look for us on [CurseForge]() mod page ✔
+
+<br/>
+
+### Thanks to *JetBrains* 🥰 for *IntelliJ IDEA Ultimate* license and ...
+
+# Take care of yourself and your loved ones. 💖
