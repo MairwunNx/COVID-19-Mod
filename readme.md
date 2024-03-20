@@ -39,10 +39,6 @@ The resources that need to be thrown into the hole to destroy the virus depend o
 - Medium difficulty: `1 enchanted golden apple, 3 emeralds, 3 diamonds`
 - Hard difficulty: `2 enchanted golden apples, 3 emeralds, 6 diamonds`
 
-##### Good luck in the game! I hope this brings some interest to the game.
-
-*Oh, I want to say, by the way, I also wanted to add a item of holy water to a game in which you can bathe and you will be treated in it; like Putin **(Says Hi to the Party of crooks and thieves)** swimming.*
-
 #### Know bugs 🐛
 
 - Effects can randomly apply incorrectly and i don't know why. Maybe minecraft bug. `¯\_(ツ)_/¯`
